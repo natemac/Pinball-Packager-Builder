@@ -1,0 +1,75 @@
+import type { PackageSettings } from "@shared/schema";
+import { saveAs } from 'file-saver';
+
+// Import template JSON files
+import pinballEmporiumTemplate from '@/templates/settings/Pinball Emporium.json';
+import pinupPopperTemplate from '@/templates/settings/PinUP Popper.json';
+
+export interface SettingsTemplate {
+  templateName: string;
+  settings: PackageSettings;
+}
+
+export const TEMPLATE_OPTIONS = [
+  { value: 'custom', label: 'Custom...' },
+  { value: 'pinball-emporium', label: 'Pinball Emporium' },
+  { value: 'pinup-popper', label: 'PinUP Popper' }
+];
+
+export const getTemplate = (templateId: string): PackageSettings | null => {
+  switch (templateId) {
+    case 'pinball-emporium':
+      return extractSettingsFromTemplate(pinballEmporiumTemplate);
+    case 'pinup-popper':
+      return extractSettingsFromTemplate(pinupPopperTemplate);
+    default:
+      return null;
+  }
+};
+
+const extractSettingsFromTemplate = (template: any): PackageSettings => {
+  const { templateName, ...settings } = template;
+  return settings as PackageSettings;
+};
+
+export const downloadSettingsAsJson = (settings: PackageSettings, filename: string = 'package-settings.json') => {
+  const settingsWithTemplateName = {
+    templateName: 'Custom',
+    ...settings
+  };
+  
+  const blob = new Blob([JSON.stringify(settingsWithTemplateName, null, 2)], {
+    type: 'application/json'
+  });
+  
+  saveAs(blob, filename);
+};
+
+export const loadSettingsFromJson = (file: File): Promise<PackageSettings> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    
+    reader.onload = (e) => {
+      try {
+        const content = e.target?.result as string;
+        const parsed = JSON.parse(content);
+        
+        // Validate that it has the required structure
+        if (!parsed.fileSettings || typeof parsed.fileSettings !== 'object') {
+          throw new Error('Invalid settings file format');
+        }
+        
+        const settings = extractSettingsFromTemplate(parsed);
+        resolve(settings);
+      } catch (error) {
+        reject(new Error('Failed to parse settings file: ' + error));
+      }
+    };
+    
+    reader.onerror = () => {
+      reject(new Error('Failed to read file'));
+    };
+    
+    reader.readAsText(file);
+  });
+};

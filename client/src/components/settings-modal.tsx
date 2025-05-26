@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -13,7 +13,16 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { Download, Upload } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import type { PackageSettings, FileLocationSettings } from "@shared/schema";
+import { 
+  TEMPLATE_OPTIONS, 
+  getTemplate, 
+  downloadSettingsAsJson, 
+  loadSettingsFromJson 
+} from "@/lib/settings-templates";
 
 interface SettingsModalProps {
   open: boolean;
@@ -29,7 +38,9 @@ export default function SettingsModal({
   onSettingsChange
 }: SettingsModalProps) {
   const [localSettings, setLocalSettings] = useState<PackageSettings>(settings);
-  const [selectedFileType, setSelectedFileType] = useState<keyof PackageSettings['fileSettings'] | 'table'>('table');
+  const [selectedTemplate, setSelectedTemplate] = useState('custom');
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
 
   const handleSave = () => {
     onSettingsChange(localSettings);
@@ -38,7 +49,60 @@ export default function SettingsModal({
 
   const handleCancel = () => {
     setLocalSettings(settings);
+    setSelectedTemplate('custom');
     onOpenChange(false);
+  };
+
+  const handleTemplateChange = (templateId: string) => {
+    setSelectedTemplate(templateId);
+    if (templateId !== 'custom') {
+      const templateSettings = getTemplate(templateId);
+      if (templateSettings) {
+        setLocalSettings(templateSettings);
+        toast({
+          title: "Template Applied",
+          description: `${TEMPLATE_OPTIONS.find(t => t.value === templateId)?.label} settings have been loaded.`,
+        });
+      }
+    }
+  };
+
+  const handleDownloadSettings = () => {
+    downloadSettingsAsJson(localSettings, `${selectedTemplate === 'custom' ? 'custom' : selectedTemplate}-settings.json`);
+    toast({
+      title: "Settings Downloaded",
+      description: "Your settings have been downloaded as a JSON file.",
+    });
+  };
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const uploadedSettings = await loadSettingsFromJson(file);
+      setLocalSettings(uploadedSettings);
+      setSelectedTemplate('custom');
+      toast({
+        title: "Settings Imported",
+        description: "Your custom settings have been loaded successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Import Failed",
+        description: error instanceof Error ? error.message : "Failed to import settings file.",
+        variant: "destructive",
+      });
+    }
+
+    // Reset the file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   const updateSetting = <K extends keyof PackageSettings>(

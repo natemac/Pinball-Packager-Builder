@@ -1,0 +1,53 @@
+{
+  "templateName": "PinUP Popper",
+  "baseDirectory": "PinUP Popper",
+  "mediaFolder": "Media",
+  "renameFiles": true,
+  "preserveExtensions": true,
+  "convertImages": false,
+  "compressionLevel": "fast",
+  "fileSettings": {
+    "cover": {
+      "useTableName": true,
+      "prefix": "",
+      "suffix": "",
+      "location": "PinUP Popper\\POPMedia\\Visual Pinball X\\Wheel"
+    },
+    "topper": {
+      "useTableName": true,
+      "prefix": "",
+      "suffix": "",
+      "location": "PinUP Popper\\POPMedia\\Visual Pinball X\\Topper"
+    },
+    "tableVideo": {
+      "useTableName": true,
+      "prefix": "",
+      "suffix": "",
+      "location": "PinUP Popper\\POPMedia\\Visual Pinball X\\Table"
+    },
+    "marqueeVideo": {
+      "useTableName": true,
+      "prefix": "",
+      "suffix": "",
+      "location": "PinUP Popper\\POPMedia\\Visual Pinball X\\Backglass"
+    },
+    "directb2s": {
+      "useTableName": true,
+      "prefix": "",
+      "suffix": "",
+      "location": "PinUP Popper\\VPinball\\VisualPinball\\Tables"
+    },
+    "music": {
+      "useTableName": true,
+      "prefix": "",
+      "suffix": "",
+      "location": "PinUP Popper\\POPMedia\\Visual Pinball X\\Music"
+    },
+    "scripts": {
+      "useTableName": true,
+      "prefix": "",
+      "suffix": "",
+      "location": "PinUP Popper\\VPinball\\VisualPinball\\Scripts"
+    }
+  }
+}
