@@ -1,6 +1,15 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { Settings, HelpCircle, Box, Download } from "lucide-react";
 import DragDropZone from "@/components/drag-drop-zone";
@@ -292,7 +301,7 @@ export default function Home() {
                 </div>
 
                 <div className="bg-slate-50 rounded-lg p-4 mb-4">
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between mb-4">
                     <div>
                       <p className="font-medium text-slate-900">
                         Package: {tableFile ? `${tableFile.name}_Package.zip` : 'No file selected'}
@@ -304,6 +313,58 @@ export default function Home() {
                     <div className="text-right">
                       <p className="text-sm text-slate-500">Estimated size</p>
                       <p className="font-medium text-slate-900">{estimatedSize}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="compressionLevel" className="text-sm font-medium">
+                        Compression Level
+                      </Label>
+                      <Select
+                        value={settings.compressionLevel}
+                        onValueChange={(value: PackageSettings['compressionLevel']) => 
+                          updateSettings({ ...settings, compressionLevel: value })
+                        }
+                      >
+                        <SelectTrigger className="mt-1">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">No Compression</SelectItem>
+                          <SelectItem value="fast">Fast</SelectItem>
+                          <SelectItem value="normal">Normal</SelectItem>
+                          <SelectItem value="maximum">Maximum</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="convertImages"
+                          checked={settings.convertImages}
+                          onCheckedChange={(checked) => 
+                            updateSettings({ ...settings, convertImages: !!checked })
+                          }
+                        />
+                        <Label htmlFor="convertImages" className="text-sm">
+                          Convert images to PNG
+                        </Label>
+                      </div>
+                      
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="preserveExtensions"
+                          checked={settings.preserveExtensions}
+                          onCheckedChange={(checked) => 
+                            updateSettings({ ...settings, preserveExtensions: !!checked })
+                          }
+                        />
+                        <Label htmlFor="preserveExtensions" className="text-sm">
+                          Preserve file extensions
+                        </Label>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -374,7 +435,7 @@ export default function Home() {
                     onClick={() => setShowSettings(true)}
                   >
                     <Settings className="h-4 w-4 mr-3" />
-                    Package Settings
+                    File Locations
                   </Button>
                 </div>
               </CardContent>
