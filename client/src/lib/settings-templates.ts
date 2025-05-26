@@ -33,9 +33,11 @@ const extractSettingsFromTemplate = (template: any): PackageSettings => {
 };
 
 export const downloadSettingsAsJson = (settings: PackageSettings, filename: string = 'package-settings.json') => {
+  // Remove baseDirectory and mediaFolder from export as they're not user settings
+  const { baseDirectory, mediaFolder, ...exportSettings } = settings;
   const settingsWithTemplateName = {
     templateName: 'Custom',
-    ...settings
+    ...exportSettings
   };
   
   const blob = new Blob([JSON.stringify(settingsWithTemplateName, null, 2)], {

@@ -39,6 +39,7 @@ export default function SettingsModal({
 }: SettingsModalProps) {
   const [localSettings, setLocalSettings] = useState<PackageSettings>(settings);
   const [selectedTemplate, setSelectedTemplate] = useState('custom');
+  const [selectedFileType, setSelectedFileType] = useState<keyof PackageSettings['fileSettings'] | 'table'>('table');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -300,10 +301,29 @@ export default function SettingsModal({
 
           <Separator className="mb-6" />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {(Object.keys(localSettings.fileSettings) as Array<keyof PackageSettings['fileSettings']>).map(category =>
-              renderFileSettingsCard(category)
-            )}
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="file-type-select" className="text-sm font-medium">
+                Select File Type
+              </Label>
+              <Select value={selectedFileType} onValueChange={(value) => setSelectedFileType(value as keyof PackageSettings['fileSettings'] | 'table')}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Choose a file type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="table">
+                    {getCategoryDisplayName('table')}
+                  </SelectItem>
+                  {(Object.keys(localSettings.fileSettings) as Array<keyof PackageSettings['fileSettings']>).map(category => (
+                    <SelectItem key={category} value={category}>
+                      {getCategoryDisplayName(category)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            {selectedFileType === 'table' ? renderTableFileSettingsCard() : renderFileSettingsCard(selectedFileType)}
           </div>
         </div>
         
