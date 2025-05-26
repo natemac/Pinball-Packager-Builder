@@ -79,6 +79,19 @@ export default function Home() {
     });
   };
 
+  const handleUseTableNameChange = (category: AdditionalFile['category'], use: boolean) => {
+    updateSettings({
+      ...settings,
+      fileSettings: {
+        ...settings.fileSettings,
+        [category]: {
+          ...settings.fileSettings[category],
+          useTableName: use
+        }
+      }
+    });
+  };
+
   const handleGeneratePackage = async () => {
     if (!tableFile) {
       toast({
@@ -217,6 +230,9 @@ export default function Home() {
                     icon="image"
                     onFileUpload={(file) => handleAdditionalFileUpload(file, 'cover')}
                     acceptedTypes={['.png', '.jpg', '.jpeg']}
+                    useTableName={settings.fileSettings.cover.useTableName}
+                    onUseTableNameChange={(use) => handleUseTableNameChange('cover', use)}
+                    category="cover"
                   />
                   
                   <FileUploadCard
@@ -225,6 +241,9 @@ export default function Home() {
                     icon="image"
                     onFileUpload={(file) => handleAdditionalFileUpload(file, 'topper')}
                     acceptedTypes={['.png', '.jpg', '.jpeg']}
+                    useTableName={settings.fileSettings.topper.useTableName}
+                    onUseTableNameChange={(use) => handleUseTableNameChange('topper', use)}
+                    category="topper"
                   />
                   
                   <FileUploadCard
@@ -233,6 +252,9 @@ export default function Home() {
                     icon="video"
                     onFileUpload={(file) => handleAdditionalFileUpload(file, 'tableVideo')}
                     acceptedTypes={['.mp4', '.avi', '.mov']}
+                    useTableName={settings.fileSettings.tableVideo.useTableName}
+                    onUseTableNameChange={(use) => handleUseTableNameChange('tableVideo', use)}
+                    category="tableVideo"
                   />
                   
                   <FileUploadCard
@@ -241,6 +263,9 @@ export default function Home() {
                     icon="video"
                     onFileUpload={(file) => handleAdditionalFileUpload(file, 'marqueeVideo')}
                     acceptedTypes={['.mp4', '.avi', '.mov']}
+                    useTableName={settings.fileSettings.marqueeVideo.useTableName}
+                    onUseTableNameChange={(use) => handleUseTableNameChange('marqueeVideo', use)}
+                    category="marqueeVideo"
                   />
                 </div>
 
@@ -260,6 +285,9 @@ export default function Home() {
                           onFileUpload={(file) => handleAdditionalFileUpload(file, 'directb2s')}
                           acceptedTypes={['.directb2s']}
                           compact
+                          useTableName={settings.fileSettings.directb2s.useTableName}
+                          onUseTableNameChange={(use) => handleUseTableNameChange('directb2s', use)}
+                          category="directb2s"
                         />
                       </div>
                       
@@ -271,6 +299,9 @@ export default function Home() {
                           onFileUpload={(file) => handleAdditionalFileUpload(file, 'music')}
                           acceptedTypes={['.mp3', '.wav']}
                           compact
+                          useTableName={settings.fileSettings.music.useTableName}
+                          onUseTableNameChange={(use) => handleUseTableNameChange('music', use)}
+                          category="music"
                         />
                       </div>
                       
@@ -282,6 +313,9 @@ export default function Home() {
                           onFileUpload={(file) => handleAdditionalFileUpload(file, 'scripts')}
                           acceptedTypes={['.vbs', '.txt']}
                           compact
+                          useTableName={settings.fileSettings.scripts.useTableName}
+                          onUseTableNameChange={(use) => handleUseTableNameChange('scripts', use)}
+                          category="scripts"
                         />
                       </div>
                     </div>
