@@ -91,10 +91,10 @@ export default function PackageStructure({
     
     let fileName = '';
     
-    if (fileSettings?.useTableName) {
+    if (settings.renameFiles) {
       // Use table name with prefix/suffix
-      const prefix = fileSettings.prefix || '';
-      const suffix = fileSettings.suffix || '';
+      const prefix = fileSettings?.prefix || '';
+      const suffix = fileSettings?.suffix || '';
       fileName = `${prefix}${tableName}${suffix}`;
     } else {
       // Use original name with prefix/suffix

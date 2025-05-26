@@ -342,6 +342,19 @@ export default function Home() {
                     <div className="space-y-2">
                       <div className="flex items-center space-x-2">
                         <Checkbox
+                          id="useTableName"
+                          checked={settings.renameFiles}
+                          onCheckedChange={(checked) => 
+                            updateSettings({ ...settings, renameFiles: !!checked })
+                          }
+                        />
+                        <Label htmlFor="useTableName" className="text-sm font-medium">
+                          Use table name as filename
+                        </Label>
+                      </div>
+                      
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
                           id="convertImages"
                           checked={settings.convertImages}
                           onCheckedChange={(checked) => 

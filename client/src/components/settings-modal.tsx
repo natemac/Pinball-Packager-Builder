@@ -86,17 +86,6 @@ export default function SettingsModal({
           <h4 className="font-medium text-slate-900 mb-3">{displayName}</h4>
           
           <div className="space-y-3">
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id={`${category}-useTableName`}
-                checked={settings.useTableName}
-                onCheckedChange={(checked) => updateFileSettings(category, 'useTableName', !!checked)}
-              />
-              <Label htmlFor={`${category}-useTableName`} className="text-sm">
-                Use table name as filename
-              </Label>
-            </div>
-            
             <div className="grid grid-cols-2 gap-2">
               <div>
                 <Label htmlFor={`${category}-prefix`} className="text-xs text-slate-600">

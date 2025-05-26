@@ -36,7 +36,7 @@ export default function DragDropZone({ onFileUpload, acceptedTypes, tableFile }:
       <div
         {...getRootProps()}
         className={`
-          border-2 border-dashed rounded-lg p-8 text-center transition-all duration-200 cursor-pointer
+          border-2 border-dashed rounded-lg p-6 text-center transition-all duration-200 cursor-pointer
           ${isDragActive || dragActive 
             ? 'border-blue-400 bg-blue-50' 
             : 'border-slate-300 hover:border-blue-400 hover:bg-blue-50'
@@ -44,12 +44,12 @@ export default function DragDropZone({ onFileUpload, acceptedTypes, tableFile }:
         `}
       >
         <input {...getInputProps()} />
-        <CloudUpload className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-        <p className="text-lg font-medium text-slate-700 mb-2">Drop your table file here</p>
-        <p className="text-sm text-slate-500 mb-4">
+        <CloudUpload className="h-8 w-8 text-slate-400 mx-auto mb-3" />
+        <p className="text-base font-medium text-slate-700 mb-2">Drop your table file here</p>
+        <p className="text-sm text-slate-500 mb-3">
           Supports .vpx (Visual Pinball X) and .fp (Future Pinball) files
         </p>
-        <Button onClick={open} className="bg-blue-600 hover:bg-blue-700">
+        <Button onClick={open} size="sm" className="bg-blue-600 hover:bg-blue-700">
           Choose File
         </Button>
       </div>
