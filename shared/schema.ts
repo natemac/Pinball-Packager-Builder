@@ -72,10 +72,9 @@ export interface FileLocationSettings {
 export interface PackageSettings {
   baseDirectory: string;
   mediaFolder: string;
-  renameFiles: boolean;
   preserveExtensions: boolean;
   convertImages: boolean;
-  compressionLevel: 'low' | 'normal' | 'high';
+  compressionLevel: 'fast' | 'normal' | 'high';
   tableFileSettings: FileLocationSettings;
   fileSettings: {
     cover: FileLocationSettings;
