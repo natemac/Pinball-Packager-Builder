@@ -40,6 +40,7 @@ export default function SettingsModal({
   const [localSettings, setLocalSettings] = useState<PackageSettings>(settings);
   const [selectedTemplate, setSelectedTemplate] = useState('custom');
   const [selectedFileType, setSelectedFileType] = useState<keyof PackageSettings['fileSettings'] | 'table'>('table');
+  const [dynamicTemplateOptions, setDynamicTemplateOptions] = useState(TEMPLATE_OPTIONS);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -51,6 +52,7 @@ export default function SettingsModal({
   const handleCancel = () => {
     setLocalSettings(settings);
     setSelectedTemplate('custom');
+    setDynamicTemplateOptions(TEMPLATE_OPTIONS);
     onOpenChange(false);
   };
 
@@ -85,13 +87,59 @@ export default function SettingsModal({
     if (!file) return;
 
     try {
-      const uploadedSettings = await loadSettingsFromJson(file);
-      setLocalSettings(uploadedSettings);
-      setSelectedTemplate('custom');
-      toast({
-        title: "Settings Imported",
-        description: "Your custom settings have been loaded successfully.",
-      });
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const content = e.target?.result as string;
+          const parsed = JSON.parse(content);
+          
+          // Validate that it has the required structure
+          if (!parsed.fileSettings || typeof parsed.fileSettings !== 'object') {
+            throw new Error('Invalid settings file format');
+          }
+          
+          // Extract template name and settings
+          const templateName = parsed.templateName || 'Custom Upload';
+          const { templateName: _, ...settingsOnly } = parsed;
+          
+          // Update settings
+          setLocalSettings(settingsOnly as PackageSettings);
+          
+          // Create a unique template ID based on the template name
+          const templateId = templateName.toLowerCase().replace(/\s+/g, '-');
+          
+          // Add to dynamic template options if not already present
+          const existingOption = dynamicTemplateOptions.find(opt => opt.value === templateId);
+          if (!existingOption) {
+            const newOption = { value: templateId, label: templateName };
+            setDynamicTemplateOptions(prev => [...prev, newOption]);
+          }
+          
+          // Set as selected template
+          setSelectedTemplate(templateId);
+          
+          toast({
+            title: "Settings Imported",
+            description: `${templateName} settings have been loaded successfully.`,
+          });
+        } catch (error) {
+          toast({
+            title: "Import Failed",
+            description: error instanceof Error ? error.message : "Failed to parse settings file.",
+            variant: "destructive",
+          });
+        }
+      };
+      
+      reader.onerror = () => {
+        toast({
+          title: "Import Failed",
+          description: "Failed to read file.",
+          variant: "destructive",
+        });
+      };
+      
+      reader.readAsText(file);
     } catch (error) {
       toast({
         title: "Import Failed",
@@ -291,7 +339,7 @@ export default function SettingsModal({
                   <SelectValue placeholder="Select a template" />
                 </SelectTrigger>
                 <SelectContent>
-                  {TEMPLATE_OPTIONS.map(option => (
+                  {dynamicTemplateOptions.map(option => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}
                     </SelectItem>
