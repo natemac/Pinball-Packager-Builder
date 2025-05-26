@@ -119,6 +119,127 @@ export default function PackageStructure({
     return `${fileName}.${extension}`;
   };
 
+  interface TreeNode {
+    name: string;
+    type: 'folder' | 'file';
+    children: TreeNode[];
+    file?: AdditionalFile;
+    path: string;
+  }
+
+  const buildFileTree = () => {
+    if (!tableFile) return [];
+
+    const root: TreeNode = {
+      name: 'Package',
+      type: 'folder',
+      children: [],
+      path: ''
+    };
+
+    // Add table file
+    const gameTypeName = tableFile.type === 'vpx' ? 'Visual Pinball X' : 'Future Pinball';
+    const gameTypeNode: TreeNode = {
+      name: gameTypeName,
+      type: 'folder',
+      children: [],
+      path: gameTypeName
+    };
+
+    // Add the table file itself
+    gameTypeNode.children.push({
+      name: tableFile.file.name,
+      type: 'file',
+      children: [],
+      path: `${gameTypeName}/${tableFile.file.name}`
+    });
+
+    root.children.push(gameTypeNode);
+
+    // Build tree structure from file paths
+    additionalFiles.forEach(file => {
+      const fullPath = getCategoryPath(file.category);
+      const pathParts = fullPath.split('/').filter(part => part);
+      const fileName = getDisplayFileName(file);
+
+      let currentNode = root;
+      let currentPath = '';
+
+      // Navigate/create path
+      pathParts.forEach((part, index) => {
+        currentPath = currentPath ? `${currentPath}/${part}` : part;
+        
+        let existingNode = currentNode.children.find(child => 
+          child.name === part && child.type === 'folder'
+        );
+
+        if (!existingNode) {
+          existingNode = {
+            name: part,
+            type: 'folder',
+            children: [],
+            path: currentPath
+          };
+          currentNode.children.push(existingNode);
+        }
+
+        currentNode = existingNode;
+      });
+
+      // Add file to final directory
+      currentNode.children.push({
+        name: fileName,
+        type: 'file',
+        children: [],
+        file,
+        path: `${fullPath}/${fileName}`
+      });
+    });
+
+    return renderTreeNode(root, 0);
+  };
+
+  const renderTreeNode = (node: TreeNode, depth: number): JSX.Element[] => {
+    const indent = depth * 16; // 16px per level
+    const elements: JSX.Element[] = [];
+
+    if (depth > 0) { // Don't render the root "Package" node
+      elements.push(
+        <div 
+          key={node.path} 
+          className="flex items-center text-slate-700"
+          style={{ paddingLeft: `${indent}px` }}
+        >
+          {node.type === 'folder' ? (
+            <Folder className="h-4 w-4 text-amber-500 mr-2 flex-shrink-0" />
+          ) : (
+            node.file ? getFileIcon(node.file.category) : 
+            <FileText className="h-4 w-4 text-slate-500 mr-2 flex-shrink-0" />
+          )}
+          <span className="text-xs truncate" title={node.name}>
+            {node.name}
+            {node.type === 'folder' ? '/' : ''}
+          </span>
+        </div>
+      );
+    }
+
+    // Sort children: folders first, then files
+    const sortedChildren = [...node.children].sort((a, b) => {
+      if (a.type !== b.type) {
+        return a.type === 'folder' ? -1 : 1;
+      }
+      return a.name.localeCompare(b.name);
+    });
+
+    // Render children
+    sortedChildren.forEach(child => {
+      elements.push(...renderTreeNode(child, depth + 1));
+    });
+
+    return elements;
+  };
+
   return (
     <Card>
       <CardContent className="p-6">
@@ -127,47 +248,17 @@ export default function PackageStructure({
           Package Structure
         </h3>
         
-        <div className="space-y-2 text-sm font-mono">
+        <div className="text-sm font-mono">
           {!tableFile && (
             <div className="text-slate-400 italic">
               Upload a table file to see structure
             </div>
           )}
           
-          {tableFile && additionalFiles.length === 0 && (
-            <div className="text-slate-500">
-              No additional files added yet
+          {tableFile && (
+            <div className="space-y-1">
+              {buildFileTree()}
             </div>
-          )}
-          
-          {tableFile && additionalFiles.length > 0 && (
-            <>
-              {/* Group files by their paths */}
-              {Array.from(new Set(additionalFiles.map(f => getCategoryPath(f.category)))).map(path => {
-                const filesInPath = additionalFiles.filter(f => getCategoryPath(f.category) === path);
-                const pathParts = path.split('/');
-                
-                return (
-                  <div key={path} className="mb-4">
-                    {/* Show the full path */}
-                    <div className="flex items-center text-slate-700 mb-2">
-                      <Folder className="h-4 w-4 text-amber-500 mr-2" />
-                      <span className="text-xs break-all">{path}/</span>
-                    </div>
-                    
-                    {/* Show files in this path */}
-                    {filesInPath.map(file => (
-                      <div key={file.id} className="ml-6 flex items-center text-slate-500">
-                        {getFileIcon(file.category)}
-                        <span className="ml-2 text-xs">
-                          {getDisplayFileName(file)}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                );
-              })}
-            </>
           )}
         </div>
       </CardContent>
