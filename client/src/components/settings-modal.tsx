@@ -279,29 +279,64 @@ export default function SettingsModal({
         </DialogHeader>
         
         <div className="py-6">
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="file-type-select" className="text-sm font-medium">
-                Select File Type
-              </Label>
-              <Select value={selectedFileType} onValueChange={(value) => setSelectedFileType(value as keyof PackageSettings['fileSettings'] | 'table')}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Choose a file type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="table">
-                    {getCategoryDisplayName('table')}
+          {/* Template Selection */}
+          <div className="mb-6">
+            <Label htmlFor="template-select" className="text-sm font-medium">
+              Use Template Settings
+            </Label>
+            <Select value={selectedTemplate} onValueChange={handleTemplateChange}>
+              <SelectTrigger className="mt-1">
+                <SelectValue placeholder="Select a template" />
+              </SelectTrigger>
+              <SelectContent>
+                {TEMPLATE_OPTIONS.map(option => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
                   </SelectItem>
-                  {(Object.keys(localSettings.fileSettings) as Array<keyof PackageSettings['fileSettings']>).map(category => (
-                    <SelectItem key={category} value={category}>
-                      {getCategoryDisplayName(category)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <Separator className="mb-6" />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {(Object.keys(localSettings.fileSettings) as Array<keyof PackageSettings['fileSettings']>).map(category =>
+              renderFileSettingsCard(category)
+            )}
+          </div>
+        </div>
+        
+        <Separator className="my-4" />
+        
+        {/* JSON Import/Export */}
+        <div className="flex justify-between items-center py-4">
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              onClick={handleDownloadSettings}
+              className="flex items-center gap-2"
+            >
+              <Download className="h-4 w-4" />
+              Download Settings .json
+            </Button>
             
-            {selectedFileType === 'table' ? renderTableFileSettingsCard() : renderFileSettingsCard(selectedFileType)}
+            <Button
+              variant="outline"
+              onClick={handleUploadClick}
+              className="flex items-center gap-2"
+            >
+              <Upload className="h-4 w-4" />
+              Upload Settings .json
+            </Button>
+            
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".json"
+              onChange={handleFileUpload}
+              className="hidden"
+            />
           </div>
         </div>
         
