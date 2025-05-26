@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { PackageSettings, FileLocationSettings } from "@shared/schema";
 
 interface SettingsModalProps {
@@ -28,6 +29,7 @@ export default function SettingsModal({
   onSettingsChange
 }: SettingsModalProps) {
   const [localSettings, setLocalSettings] = useState<PackageSettings>(settings);
+  const [selectedFileType, setSelectedFileType] = useState<keyof PackageSettings['fileSettings']>('cover');
 
   const handleSave = () => {
     onSettingsChange(localSettings);
@@ -154,10 +156,26 @@ export default function SettingsModal({
         </DialogHeader>
         
         <div className="py-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {(Object.keys(localSettings.fileSettings) as Array<keyof PackageSettings['fileSettings']>).map(category =>
-              renderFileSettingsCard(category)
-            )}
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="file-type-select" className="text-sm font-medium">
+                Select File Type
+              </Label>
+              <Select value={selectedFileType} onValueChange={(value) => setSelectedFileType(value as keyof PackageSettings['fileSettings'])}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Choose a file type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {(Object.keys(localSettings.fileSettings) as Array<keyof PackageSettings['fileSettings']>).map(category => (
+                    <SelectItem key={category} value={category}>
+                      {getCategoryDisplayName(category)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            {renderFileSettingsCard(selectedFileType)}
           </div>
         </div>
         
