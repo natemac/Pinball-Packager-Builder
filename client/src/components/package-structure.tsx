@@ -48,6 +48,27 @@ export default function PackageStructure({
     }
   };
 
+  const getTableFilePath = () => {
+    if (!tableFile) return '';
+    
+    const fileSettings = settings.tableFileSettings;
+    if (fileSettings?.location) {
+      // Use the custom location if specified
+      let location = fileSettings.location;
+      
+      // Replace game type placeholder if needed
+      const gameTypeName = tableFile.type === 'vpx' ? 'Visual Pinball X' : 'Future Pinball';
+      location = location.replace(/Visual Pinball X|Future Pinball/g, gameTypeName);
+      
+      // Convert backslashes to forward slashes for display
+      return location.replace(/\\/g, '/');
+    }
+    
+    // Fallback to original logic
+    const gameTypeName = tableFile.type === 'vpx' ? 'Visual Pinball X' : 'Future Pinball';
+    return `${settings.baseDirectory}/${gameTypeName}`;
+  };
+
   const getCategoryPath = (category: AdditionalFile['category']) => {
     const fileSettings = settings.fileSettings[category];
     if (fileSettings?.location) {
@@ -137,24 +158,41 @@ export default function PackageStructure({
       path: ''
     };
 
-    // Add table file
-    const gameTypeName = tableFile.type === 'vpx' ? 'Visual Pinball X' : 'Future Pinball';
-    const gameTypeNode: TreeNode = {
-      name: gameTypeName,
-      type: 'folder',
-      children: [],
-      path: gameTypeName
-    };
+    // Add table file using the table file settings
+    const tableFilePath = getTableFilePath();
+    const pathParts = tableFilePath.split('/').filter(part => part);
+    
+    let currentNode = root;
+    let currentPath = '';
+
+    // Navigate/create path for table file
+    pathParts.forEach((part, index) => {
+      currentPath = currentPath ? `${currentPath}/${part}` : part;
+      
+      let existingNode = currentNode.children.find(child => 
+        child.name === part && child.type === 'folder'
+      );
+
+      if (!existingNode) {
+        existingNode = {
+          name: part,
+          type: 'folder',
+          children: [],
+          path: currentPath
+        };
+        currentNode.children.push(existingNode);
+      }
+
+      currentNode = existingNode;
+    });
 
     // Add the table file itself
-    gameTypeNode.children.push({
+    currentNode.children.push({
       name: tableFile.file.name,
       type: 'file',
       children: [],
-      path: `${gameTypeName}/${tableFile.file.name}`
+      path: `${tableFilePath}/${tableFile.file.name}`
     });
-
-    root.children.push(gameTypeNode);
 
     // Build tree structure from file paths
     additionalFiles.forEach(file => {
