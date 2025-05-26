@@ -72,7 +72,6 @@ export interface FileLocationSettings {
 export interface PackageSettings {
   baseDirectory: string;
   mediaFolder: string;
-  renameFiles: boolean;
   preserveExtensions: boolean;
   convertImages: boolean;
   compressionLevel: 'low' | 'normal' | 'high';

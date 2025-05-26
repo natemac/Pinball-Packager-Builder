@@ -6,7 +6,6 @@ import { generateUniqueId } from '@/lib/file-utils';
 const defaultSettings: PackageSettings = {
   baseDirectory: 'Collection',
   mediaFolder: 'media',
-  renameFiles: true,
   preserveExtensions: true,
   convertImages: true,
   compressionLevel: 'normal',
@@ -75,7 +74,7 @@ export function useFileProcessor() {
       category,
       size: file.size
     };
-    
+
     setAdditionalFiles(prev => [...prev, newFile]);
   }, []);
 
