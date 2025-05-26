@@ -10,6 +10,12 @@ const defaultSettings: PackageSettings = {
   preserveExtensions: true,
   convertImages: true,
   compressionLevel: 'normal',
+  tableFileSettings: {
+    useTableName: false,
+    prefix: '',
+    suffix: '',
+    location: 'Collection\\Visual Pinball X\\Tables'
+  },
   fileSettings: {
     cover: {
       useTableName: true,

@@ -29,7 +29,7 @@ export default function SettingsModal({
   onSettingsChange
 }: SettingsModalProps) {
   const [localSettings, setLocalSettings] = useState<PackageSettings>(settings);
-  const [selectedFileType, setSelectedFileType] = useState<keyof PackageSettings['fileSettings']>('cover');
+  const [selectedFileType, setSelectedFileType] = useState<keyof PackageSettings['fileSettings'] | 'table'>('table');
 
   const handleSave = () => {
     onSettingsChange(localSettings);
@@ -65,8 +65,22 @@ export default function SettingsModal({
     }));
   };
 
-  const getCategoryDisplayName = (category: keyof PackageSettings['fileSettings']): string => {
+  const updateTableFileSettings = (
+    key: keyof FileLocationSettings,
+    value: string | boolean
+  ) => {
+    setLocalSettings(prev => ({
+      ...prev,
+      tableFileSettings: {
+        ...prev.tableFileSettings,
+        [key]: value
+      }
+    }));
+  };
+
+  const getCategoryDisplayName = (category: keyof PackageSettings['fileSettings'] | 'table'): string => {
     const names = {
+      table: 'Table File',
       cover: 'Cover Image',
       topper: 'Topper Image',
       tableVideo: 'Table Video',
@@ -75,7 +89,63 @@ export default function SettingsModal({
       music: 'Music Files',
       scripts: 'Script Files'
     };
-    return names[category];
+    return names[category as keyof typeof names];
+  };
+
+  const renderTableFileSettingsCard = () => {
+    const settings = localSettings.tableFileSettings;
+    const displayName = getCategoryDisplayName('table');
+
+    return (
+      <Card>
+        <CardContent className="p-4">
+          <h4 className="font-medium text-slate-900 mb-3">{displayName}</h4>
+          
+          <div className="space-y-3">
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <Label htmlFor="table-prefix" className="text-xs text-slate-600">
+                  Prefix
+                </Label>
+                <Input
+                  id="table-prefix"
+                  value={settings.prefix}
+                  onChange={(e) => updateTableFileSettings('prefix', e.target.value)}
+                  placeholder="prefix_"
+                  className="text-sm"
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="table-suffix" className="text-xs text-slate-600">
+                  Suffix
+                </Label>
+                <Input
+                  id="table-suffix"
+                  value={settings.suffix}
+                  onChange={(e) => updateTableFileSettings('suffix', e.target.value)}
+                  placeholder="_suffix"
+                  className="text-sm"
+                />
+              </div>
+            </div>
+            
+            <div>
+              <Label htmlFor="table-location" className="text-xs text-slate-600">
+                File Location
+              </Label>
+              <Input
+                id="table-location"
+                value={settings.location}
+                onChange={(e) => updateTableFileSettings('location', e.target.value)}
+                placeholder="Collection\Visual Pinball X\Tables"
+                className="text-sm font-mono"
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
   };
 
   const renderFileSettingsCard = (category: keyof PackageSettings['fileSettings']) => {
@@ -150,11 +220,14 @@ export default function SettingsModal({
               <Label htmlFor="file-type-select" className="text-sm font-medium">
                 Select File Type
               </Label>
-              <Select value={selectedFileType} onValueChange={(value) => setSelectedFileType(value as keyof PackageSettings['fileSettings'])}>
+              <Select value={selectedFileType} onValueChange={(value) => setSelectedFileType(value as keyof PackageSettings['fileSettings'] | 'table')}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Choose a file type" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="table">
+                    {getCategoryDisplayName('table')}
+                  </SelectItem>
                   {(Object.keys(localSettings.fileSettings) as Array<keyof PackageSettings['fileSettings']>).map(category => (
                     <SelectItem key={category} value={category}>
                       {getCategoryDisplayName(category)}
@@ -164,7 +237,7 @@ export default function SettingsModal({
               </Select>
             </div>
             
-            {renderFileSettingsCard(selectedFileType)}
+            {selectedFileType === 'table' ? renderTableFileSettingsCard() : renderFileSettingsCard(selectedFileType)}
           </div>
         </div>
         

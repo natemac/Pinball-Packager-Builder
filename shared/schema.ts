@@ -75,7 +75,8 @@ export interface PackageSettings {
   renameFiles: boolean;
   preserveExtensions: boolean;
   convertImages: boolean;
-  compressionLevel: 'none' | 'fast' | 'normal' | 'maximum';
+  compressionLevel: 'low' | 'normal' | 'high';
+  tableFileSettings: FileLocationSettings;
   fileSettings: {
     cover: FileLocationSettings;
     topper: FileLocationSettings;
