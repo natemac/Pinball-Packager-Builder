@@ -64,7 +64,7 @@ export default function SettingsModal({
         setLocalSettings(templateSettings);
         toast({
           title: "Template Applied",
-          description: `${TEMPLATE_OPTIONS.find(t => t.value === templateId)?.label} settings have been loaded.`,
+          description: `${dynamicTemplateOptions.find(t => t.value === templateId)?.label} settings have been loaded.`,
         });
       }
     }
