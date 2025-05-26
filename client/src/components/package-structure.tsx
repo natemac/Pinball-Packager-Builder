@@ -48,24 +48,75 @@ export default function PackageStructure({
     }
   };
 
-  const getCategoryFolder = (category: string) => {
+  const getCategoryPath = (category: AdditionalFile['category']) => {
+    const fileSettings = settings.fileSettings[category];
+    if (fileSettings?.location) {
+      // Use the custom location if specified
+      let location = fileSettings.location;
+      
+      // Replace game type placeholder if needed
+      const gameTypeName = tableFile?.type === 'vpx' ? 'Visual Pinball X' : 'Future Pinball';
+      location = location.replace(/Visual Pinball X|Future Pinball/g, gameTypeName);
+      
+      // Convert backslashes to forward slashes for display
+      return location.replace(/\\/g, '/');
+    }
+    
+    // Fallback to original logic
+    const gameTypeName = tableFile?.type === 'vpx' ? 'Visual Pinball X' : 'Future Pinball';
+    const basePath = `${settings.baseDirectory}/${gameTypeName}`;
+    
     switch (category) {
       case 'cover':
-        return 'Covers';
+        return `${basePath}/${settings.mediaFolder}/Covers`;
       case 'topper':
-        return 'Topper';
+        return `${basePath}/${settings.mediaFolder}/Topper`;
       case 'tableVideo':
       case 'marqueeVideo':
-        return 'Videos';
+        return `${basePath}/${settings.mediaFolder}/Videos`;
       case 'directb2s':
-        return 'DirectB2S';
+        return `${basePath}/DirectB2S`;
       case 'music':
-        return 'Music';
+        return `${basePath}/${settings.mediaFolder}/Music`;
       case 'scripts':
-        return 'Scripts';
+        return `${basePath}/Scripts`;
       default:
-        return 'Other';
+        return `${basePath}/${settings.mediaFolder}/Other`;
     }
+  };
+
+  const getDisplayFileName = (file: AdditionalFile) => {
+    const fileSettings = settings.fileSettings[file.category];
+    const extension = file.originalName.split('.').pop() || '';
+    
+    let fileName = '';
+    
+    if (fileSettings?.useTableName) {
+      // Use table name with prefix/suffix
+      const prefix = fileSettings.prefix || '';
+      const suffix = fileSettings.suffix || '';
+      fileName = `${prefix}${tableName}${suffix}`;
+    } else {
+      // Use original name with prefix/suffix
+      const baseName = file.originalName.replace(/\.[^/.]+$/, '');
+      const prefix = fileSettings?.prefix || '';
+      const suffix = fileSettings?.suffix || '';
+      fileName = `${prefix}${baseName}${suffix}`;
+    }
+    
+    // Handle image conversion to PNG
+    if (settings.convertImages && 
+        (file.category === 'cover' || file.category === 'topper') &&
+        extension && ['jpg', 'jpeg', 'png', 'gif', 'bmp'].includes(extension.toLowerCase())) {
+      return `${fileName}.png`;
+    }
+    
+    // Add original extension
+    if (settings.preserveExtensions && extension) {
+      return `${fileName}.${extension}`;
+    }
+    
+    return `${fileName}.${extension}`;
   };
 
   return (
@@ -77,55 +128,46 @@ export default function PackageStructure({
         </h3>
         
         <div className="space-y-2 text-sm font-mono">
-          <div className="flex items-center text-slate-700">
-            <Folder className="h-4 w-4 text-amber-500 mr-2" />
-            {settings.baseDirectory}/
-          </div>
-          
-          {tableFile && (
-            <>
-              <div className="ml-4 flex items-center text-slate-700">
-                <Folder className="h-4 w-4 text-amber-500 mr-2" />
-                {gameType}/
-              </div>
-              
-              <div className="ml-8 flex items-center text-slate-700">
-                <Folder className="h-4 w-4 text-amber-500 mr-2" />
-                {settings.mediaFolder}/
-              </div>
-              
-              {/* Show folders for each category that has files */}
-              {additionalFiles.length > 0 && (
-                <>
-                  {Array.from(new Set(additionalFiles.map(f => getCategoryFolder(f.category)))).map(folder => (
-                    <div key={folder}>
-                      <div className="ml-12 flex items-center text-slate-600">
-                        <Folder className="h-4 w-4 text-amber-500 mr-2" />
-                        {folder}/
-                      </div>
-                      
-                      {additionalFiles
-                        .filter(f => getCategoryFolder(f.category) === folder)
-                        .map(file => (
-                          <div key={file.id} className="ml-16 flex items-center text-slate-500">
-                            {getFileIcon(file.category)}
-                            <span className="ml-2">
-                              {settings.renameFiles ? tableName : file.originalName.replace(/\.[^/.]+$/, "")}
-                              {getFileExtension(file.category)}
-                            </span>
-                          </div>
-                        ))}
-                    </div>
-                  ))}
-                </>
-              )}
-            </>
-          )}
-          
           {!tableFile && (
-            <div className="ml-4 text-slate-400 italic">
+            <div className="text-slate-400 italic">
               Upload a table file to see structure
             </div>
+          )}
+          
+          {tableFile && additionalFiles.length === 0 && (
+            <div className="text-slate-500">
+              No additional files added yet
+            </div>
+          )}
+          
+          {tableFile && additionalFiles.length > 0 && (
+            <>
+              {/* Group files by their paths */}
+              {Array.from(new Set(additionalFiles.map(f => getCategoryPath(f.category)))).map(path => {
+                const filesInPath = additionalFiles.filter(f => getCategoryPath(f.category) === path);
+                const pathParts = path.split('/');
+                
+                return (
+                  <div key={path} className="mb-4">
+                    {/* Show the full path */}
+                    <div className="flex items-center text-slate-700 mb-2">
+                      <Folder className="h-4 w-4 text-amber-500 mr-2" />
+                      <span className="text-xs break-all">{path}/</span>
+                    </div>
+                    
+                    {/* Show files in this path */}
+                    {filesInPath.map(file => (
+                      <div key={file.id} className="ml-6 flex items-center text-slate-500">
+                        {getFileIcon(file.category)}
+                        <span className="ml-2 text-xs">
+                          {getDisplayFileName(file)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                );
+              })}
+            </>
           )}
         </div>
       </CardContent>

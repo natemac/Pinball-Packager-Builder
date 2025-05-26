@@ -35,6 +35,20 @@ export class PackageBuilder {
   }
 
   private getCategoryPath(category: AdditionalFile['category'], gameType: 'vpx' | 'fp'): string {
+    const fileSettings = this.settings.fileSettings[category];
+    if (fileSettings?.location) {
+      // Use the custom location if specified
+      let location = fileSettings.location;
+      
+      // Replace game type placeholder if needed
+      const gameTypeName = gameType === 'vpx' ? 'Visual Pinball X' : 'Future Pinball';
+      location = location.replace(/Visual Pinball X|Future Pinball/g, gameTypeName);
+      
+      // Convert backslashes to forward slashes for consistent path handling
+      return location.replace(/\\/g, '/');
+    }
+    
+    // Fallback to original logic
     const gameTypeName = gameType === 'vpx' ? 'Visual Pinball X' : 'Future Pinball';
     const basePath = `${this.settings.baseDirectory}/${gameTypeName}`;
     
@@ -57,26 +71,41 @@ export class PackageBuilder {
     }
   }
 
-  private getFileName(originalName: string, tableName: string, category: string): string {
-    if (!this.settings.renameFiles) {
-      return originalName;
-    }
-
-    const sanitizedTableName = sanitizeFileName(tableName);
-    const extension = originalName.split('.').pop();
+  private getFileName(originalName: string, tableName: string, category: AdditionalFile['category']): string {
+    const fileSettings = this.settings.fileSettings[category];
+    const extension = originalName.split('.').pop() || '';
     
-    // Convert images to PNG if setting is enabled
+    let fileName = '';
+    
+    if (fileSettings?.useTableName) {
+      // Use table name with prefix/suffix
+      const sanitizedTableName = sanitizeFileName(tableName);
+      const prefix = fileSettings.prefix || '';
+      const suffix = fileSettings.suffix || '';
+      
+      fileName = `${prefix}${sanitizedTableName}${suffix}`;
+    } else {
+      // Use original name with prefix/suffix
+      const baseName = removeFileExtension(originalName);
+      const prefix = fileSettings?.prefix || '';
+      const suffix = fileSettings?.suffix || '';
+      
+      fileName = `${prefix}${baseName}${suffix}`;
+    }
+    
+    // Handle image conversion to PNG
     if (this.settings.convertImages && 
         (category === 'cover' || category === 'topper') &&
         extension && ['jpg', 'jpeg', 'png', 'gif', 'bmp'].includes(extension.toLowerCase())) {
-      return `${sanitizedTableName}.png`;
+      return `${fileName}.png`;
     }
     
+    // Add original extension
     if (this.settings.preserveExtensions && extension) {
-      return `${sanitizedTableName}.${extension}`;
+      return `${fileName}.${extension}`;
     }
     
-    return `${sanitizedTableName}.${extension || ''}`;
+    return `${fileName}.${extension}`;
   }
 
   async addTableFile(tableFile: TableFile): Promise<void> {

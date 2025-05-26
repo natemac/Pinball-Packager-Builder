@@ -31,6 +31,13 @@ export interface AdditionalFile {
   size: number;
 }
 
+export interface FileLocationSettings {
+  useTableName: boolean;
+  prefix: string;
+  suffix: string;
+  location: string;
+}
+
 export interface PackageSettings {
   baseDirectory: string;
   mediaFolder: string;
@@ -38,6 +45,15 @@ export interface PackageSettings {
   preserveExtensions: boolean;
   convertImages: boolean;
   compressionLevel: 'none' | 'fast' | 'normal' | 'maximum';
+  fileSettings: {
+    cover: FileLocationSettings;
+    topper: FileLocationSettings;
+    tableVideo: FileLocationSettings;
+    marqueeVideo: FileLocationSettings;
+    directb2s: FileLocationSettings;
+    music: FileLocationSettings;
+    scripts: FileLocationSettings;
+  };
 }
 
 export interface PackageStructure {

@@ -9,7 +9,51 @@ const defaultSettings: PackageSettings = {
   renameFiles: true,
   preserveExtensions: true,
   convertImages: true,
-  compressionLevel: 'normal'
+  compressionLevel: 'normal',
+  fileSettings: {
+    cover: {
+      useTableName: true,
+      prefix: '',
+      suffix: '',
+      location: 'Collection\\Visual Pinball X\\media\\covers'
+    },
+    topper: {
+      useTableName: true,
+      prefix: '',
+      suffix: '',
+      location: 'Collection\\Visual Pinball X\\media\\topper'
+    },
+    tableVideo: {
+      useTableName: true,
+      prefix: '',
+      suffix: '',
+      location: 'Collection\\Visual Pinball X\\media\\videos'
+    },
+    marqueeVideo: {
+      useTableName: true,
+      prefix: '',
+      suffix: '',
+      location: 'Collection\\Visual Pinball X\\media\\videos'
+    },
+    directb2s: {
+      useTableName: true,
+      prefix: '',
+      suffix: '',
+      location: 'Collection\\Visual Pinball X\\directb2s'
+    },
+    music: {
+      useTableName: true,
+      prefix: '',
+      suffix: '',
+      location: 'Collection\\Visual Pinball X\\media\\music'
+    },
+    scripts: {
+      useTableName: true,
+      prefix: '',
+      suffix: '',
+      location: 'Collection\\Visual Pinball X\\scripts'
+    }
+  }
 };
 
 export function useFileProcessor() {
