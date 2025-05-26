@@ -2,6 +2,7 @@
   "templateName": "Pinball Emporium",
   "baseDirectory": "Collection",
   "mediaFolder": "media",
+  "renameFiles": true,
   "preserveExtensions": true,
   "convertImages": true,
   "compressionLevel": "normal",

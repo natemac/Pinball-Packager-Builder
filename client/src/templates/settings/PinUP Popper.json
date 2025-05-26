@@ -2,6 +2,7 @@
   "templateName": "PinUP Popper",
   "baseDirectory": "PinUP Popper",
   "mediaFolder": "Media",
+  "renameFiles": true,
   "preserveExtensions": true,
   "convertImages": false,
   "compressionLevel": "fast",
