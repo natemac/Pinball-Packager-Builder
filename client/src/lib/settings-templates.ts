@@ -29,7 +29,32 @@ export const getTemplate = (templateId: string): PackageSettings | null => {
 
 const extractSettingsFromTemplate = (template: any): PackageSettings => {
   const { templateName, ...settings } = template;
-  return settings as PackageSettings;
+  
+  // Ensure we always have all required properties with defaults
+  return {
+    baseDirectory: 'Collection',
+    mediaFolder: 'media',
+    renameFiles: true,
+    preserveExtensions: true,
+    convertImages: false,
+    compressionLevel: 'normal',
+    tableFileSettings: {
+      useTableName: true,
+      prefix: '',
+      suffix: '',
+      location: 'Collection\\Visual Pinball X\\Tables'
+    },
+    fileSettings: {
+      cover: { useTableName: true, prefix: '', suffix: '', location: 'Collection\\Visual Pinball X\\media\\covers' },
+      topper: { useTableName: true, prefix: '', suffix: '', location: 'Collection\\Visual Pinball X\\media\\toppers' },
+      tableVideo: { useTableName: true, prefix: '', suffix: '', location: 'Collection\\Visual Pinball X\\media\\videos' },
+      marqueeVideo: { useTableName: true, prefix: '', suffix: '', location: 'Collection\\Visual Pinball X\\media\\marquee' },
+      directb2s: { useTableName: true, prefix: '', suffix: '', location: 'Collection\\Visual Pinball X\\Tables' },
+      music: { useTableName: true, prefix: '', suffix: '', location: 'Collection\\Visual Pinball X\\Music' },
+      scripts: { useTableName: true, prefix: '', suffix: '', location: 'Collection\\Visual Pinball X\\Scripts' }
+    },
+    ...settings
+  } as PackageSettings;
 };
 
 export const downloadSettingsAsJson = (settings: PackageSettings, filename: string = 'package-settings.json') => {
