@@ -129,25 +129,17 @@ export default function FileUploadCard({
 
   // Helper function to create thumbnail preview
   const createThumbnail = (file: File) => {
-    if (file.type.startsWith('image/')) {
-      return (
-        <img
-          src={URL.createObjectURL(file)}
-          alt="Thumbnail"
-          className="w-20 h-12 object-cover rounded-lg border border-slate-200"
-        />
-      );
-    } else if (file.type.startsWith('video/')) {
+    if (file.type.startsWith('video/')) {
       return (
         <video
           src={URL.createObjectURL(file)}
-          className="w-20 h-12 object-cover rounded-lg border border-slate-200"
+          className="absolute inset-0 w-full h-full object-cover rounded-md"
           muted
         />
       );
     } else {
       return (
-        <div className="w-20 h-12 bg-slate-100 rounded-lg border border-slate-200 flex items-center justify-center">
+        <div className="absolute inset-0 w-full h-full bg-slate-100 rounded-md flex items-center justify-center">
           <IconComponent className={`h-6 w-6 ${iconColor}`} />
         </div>
       );
@@ -194,7 +186,7 @@ export default function FileUploadCard({
             <Button
               variant="outline"
               onClick={open}
-              className="flex flex-col items-center gap-2 p-3 h-auto min-h-[4rem] pl-[0px] pr-[0px] pt-[0px] pb-[0px] ml-[0px] mr-[0px]"
+              className="p-3 pl-[75px] pr-[75px] pt-[47px] pb-[47px] mt-[-9px] mb-[-9px] ml-[-5px] mr-[-5px] overflow-hidden"
             >
               {createThumbnail(uploadedFile)}
             </Button>
