@@ -1,9 +1,9 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Image, Video, Music, Code, Plus, Check } from "lucide-react";
+import { Image, Video, Music, Code, Plus, Check, X } from "lucide-react";
 
 interface FileUploadCardProps {
   title: string;
@@ -17,6 +17,7 @@ interface FileUploadCardProps {
   category?: string;
   hasFile?: boolean;
   uploadedFile?: File;
+  onRemoveFile?: () => void;
 }
 
 const iconMap = {
@@ -44,8 +45,10 @@ export default function FileUploadCard({
   useTableName,
   onUseTableNameChange,
   hasFile = false,
-  uploadedFile
+  uploadedFile,
+  onRemoveFile
 }: FileUploadCardProps) {
+  const [isHovered, setIsHovered] = useState(false);
   const IconComponent = iconMap[icon];
   const iconColor = iconColorMap[icon];
 
@@ -127,98 +130,106 @@ export default function FileUploadCard({
     );
   }
 
-  // Helper function to create thumbnail preview
-  const createThumbnail = (file: File) => {
-    if (file.type.startsWith('image/')) {
-      return (
-        <img
-          src={URL.createObjectURL(file)}
-          alt="Thumbnail"
-          className="w-16 h-16 object-cover rounded-lg border border-slate-200"
-        />
-      );
-    } else if (file.type.startsWith('video/')) {
-      return (
-        <video
-          src={URL.createObjectURL(file)}
-          className="w-16 h-16 object-cover rounded-lg border border-slate-200"
-          muted
-        />
-      );
-    } else {
-      return (
-        <div className="w-16 h-16 bg-slate-100 rounded-lg border border-slate-200 flex items-center justify-center">
-          <IconComponent className={`h-6 w-6 ${iconColor}`} />
-        </div>
-      );
+  const handleRemoveFile = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onRemoveFile) {
+      onRemoveFile();
     }
   };
 
   return (
-    <div
-      {...getRootProps()}
-      className={`
-        border-2 border-dashed border-slate-300 rounded-lg p-6 hover:border-blue-400 transition-colors cursor-pointer
-        ${isDragActive ? 'border-blue-500 bg-blue-50' : ''}
-        ${hasFile ? 'border-solid border-green-300 bg-green-50' : ''}
-      `}
-    >
-      <input {...getInputProps()} />
-      
-      <div className="flex items-start justify-between">
-        {/* Left side - Content justified left */}
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-1">
-            <h3 className="font-medium text-slate-700">{title}</h3>
-            {hasFile && <Check className="h-4 w-4 text-green-500" />}
-          </div>
-          <p className="text-sm text-slate-500 mb-3">{description}</p>
-          
-          {onUseTableNameChange && (
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id={`${category}-useTableName`}
-                checked={useTableName}
-                onCheckedChange={(checked) => onUseTableNameChange(!!checked)}
-              />
-              <Label htmlFor={`${category}-useTableName`} className="text-xs text-slate-600">
-                Use table name as filename
-              </Label>
-            </div>
-          )}
+    <div className="space-y-3">
+      {/* Title and Description */}
+      <div>
+        <div className="flex items-center gap-2 mb-1">
+          <h3 className="font-medium text-slate-700">{title}</h3>
+          {hasFile && <Check className="h-4 w-4 text-green-500" />}
         </div>
-        
-        {/* Right side - Thumbnail or Upload Button */}
-        <div className="flex flex-col items-center gap-3 ml-4">
-          {hasFile && uploadedFile ? (
-            <>
-              {createThumbnail(uploadedFile)}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={open}
-                className="text-xs"
-              >
-                Replace
-              </Button>
-            </>
-          ) : (
-            <>
-              <div className="w-16 h-16 bg-slate-100 rounded-lg border-2 border-dashed border-slate-300 flex items-center justify-center hover:border-blue-400 transition-colors">
-                <Plus className="h-6 w-6 text-slate-400" />
-              </div>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={open}
-                className="text-xs"
-              >
-                {getButtonText()}
-              </Button>
-            </>
-          )}
-        </div>
+        <p className="text-sm text-slate-500">{description}</p>
       </div>
+
+      {/* Combined Upload Area with 16:9 Ratio */}
+      <div
+        {...getRootProps()}
+        className={`
+          relative aspect-video w-full rounded-lg border-2 border-dashed cursor-pointer transition-all duration-200
+          ${isDragActive ? 'border-blue-500 bg-blue-50' : 'border-slate-300 hover:border-blue-400'}
+          ${hasFile ? 'border-solid border-green-300 bg-green-50' : 'hover:bg-slate-50'}
+        `}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <input {...getInputProps()} />
+        
+        {hasFile && uploadedFile ? (
+          // File uploaded - show thumbnail with hover remove button
+          <div className="relative w-full h-full rounded-lg overflow-hidden">
+            {uploadedFile.type.startsWith('image/') ? (
+              <img
+                src={URL.createObjectURL(uploadedFile)}
+                alt="Uploaded file"
+                className="w-full h-full object-cover"
+              />
+            ) : uploadedFile.type.startsWith('video/') ? (
+              <video
+                src={URL.createObjectURL(uploadedFile)}
+                className="w-full h-full object-cover"
+                muted
+              />
+            ) : (
+              <div className="w-full h-full bg-slate-100 flex items-center justify-center">
+                <div className="text-center">
+                  <IconComponent className={`h-8 w-8 ${iconColor} mx-auto mb-2`} />
+                  <p className="text-sm font-medium text-slate-700">{uploadedFile.name}</p>
+                </div>
+              </div>
+            )}
+            
+            {/* Hover overlay with remove button */}
+            {isHovered && onRemoveFile && (
+              <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                <button
+                  onClick={handleRemoveFile}
+                  className="absolute top-2 right-2 w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+                <div className="text-center text-white">
+                  <p className="text-sm font-medium">Click to replace file</p>
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          // No file - show upload area
+          <div className="w-full h-full flex flex-col items-center justify-center text-center p-4">
+            <div className="mb-3">
+              <Plus className="h-8 w-8 text-slate-400 mx-auto mb-2" />
+              <IconComponent className={`h-6 w-6 ${iconColor} mx-auto`} />
+            </div>
+            <p className="text-sm font-medium text-slate-700 mb-1">
+              {getButtonText()}
+            </p>
+            <p className="text-xs text-slate-500">
+              Drag & drop or click to browse
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Use table name checkbox */}
+      {onUseTableNameChange && (
+        <div className="flex items-center space-x-2">
+          <Checkbox
+            id={`${category}-useTableName`}
+            checked={useTableName}
+            onCheckedChange={(checked) => onUseTableNameChange(!!checked)}
+          />
+          <Label htmlFor={`${category}-useTableName`} className="text-xs text-slate-600">
+            Use table name as filename
+          </Label>
+        </div>
+      )}
     </div>
   );
 }
