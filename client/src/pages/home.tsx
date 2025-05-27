@@ -454,7 +454,9 @@ export default function Home() {
 
             <AddedFilesList
               files={additionalFiles}
+              tableFile={tableFile}
               onRemoveFile={removeAdditionalFile}
+              onRemoveTableFile={() => setTableFile(null)}
             />
 
             {/* File Location Setup */}
