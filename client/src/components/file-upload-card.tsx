@@ -90,11 +90,11 @@ export default function FileUploadCard({
         <input {...getInputProps()} />
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
+            <IconComponent className={`h-4 w-4 ${iconColor}`} />
             <h3 className="font-medium text-slate-700">{title}</h3>
             {hasFile && <Check className="h-4 w-4 text-green-500" />}
           </div>
           <div>
-            <IconComponent className={`h-4 w-4 ${iconColor}`} />
             <p className="text-xs text-slate-500 mt-1">{description}</p>
           </div>
         </div>
