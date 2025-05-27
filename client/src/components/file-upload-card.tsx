@@ -202,7 +202,7 @@ export default function FileUploadCard({
             <Button
               variant="secondary"
               onClick={open}
-              className="p-3 pt-[40px] pb-[40px] pl-[40px] pr-[40px]"
+              className="p-3 pl-[75px] pr-[75px] pt-[47px] pb-[47px] mt-[-9px] mb-[-9px] ml-[-5px] mr-[-5px]"
             >
               <Plus className="h-6 w-6 text-slate-400" />
             </Button>
