@@ -138,98 +138,85 @@ export default function FileUploadCard({
   };
 
   return (
-    <div className="space-y-3">
-      {/* Title and Description */}
-      <div>
-        <div className="flex items-center gap-2 mb-1">
-          <h3 className="font-medium text-slate-700">{title}</h3>
-          {hasFile && <Check className="h-4 w-4 text-green-500" />}
-        </div>
-        <p className="text-sm text-slate-500">{description}</p>
-      </div>
-
-      {/* Combined Upload Area with 16:9 Ratio */}
-      <div
-        {...getRootProps()}
-        className={`
-          relative aspect-video w-full rounded-lg border-2 border-dashed cursor-pointer transition-all duration-200
-          ${isDragActive ? 'border-blue-500 bg-blue-50' : 'border-slate-300 hover:border-blue-400'}
-          ${hasFile ? 'border-solid border-green-300 bg-green-50' : 'hover:bg-slate-50'}
-        `}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        <input {...getInputProps()} />
-        
-        {hasFile && uploadedFile ? (
-          // File uploaded - show thumbnail with hover remove button
-          <div className="relative w-full h-full rounded-lg overflow-hidden">
-            {uploadedFile.type.startsWith('image/') ? (
-              <img
-                src={URL.createObjectURL(uploadedFile)}
-                alt="Uploaded file"
-                className="w-full h-full object-cover"
-              />
-            ) : uploadedFile.type.startsWith('video/') ? (
-              <video
-                src={URL.createObjectURL(uploadedFile)}
-                className="w-full h-full object-cover"
-                muted
-              />
-            ) : (
-              <div className="w-full h-full bg-slate-100 flex items-center justify-center">
-                <div className="text-center">
-                  <IconComponent className={`h-8 w-8 ${iconColor} mx-auto mb-2`} />
-                  <p className="text-sm font-medium text-slate-700">{uploadedFile.name}</p>
-                </div>
-              </div>
-            )}
-            
-            {/* Hover overlay with remove button */}
-            {isHovered && onRemoveFile && (
-              <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-                <button
-                  onClick={handleRemoveFile}
-                  className="absolute top-2 right-2 w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-                <div className="text-center text-white">
-                  <p className="text-sm font-medium">Click to replace file</p>
-                </div>
-              </div>
-            )}
+    <div
+      className={`
+        border-2 border-dashed border-slate-300 rounded-lg p-6 hover:border-blue-400 transition-colors cursor-pointer
+        ${isDragActive ? 'border-blue-500 bg-blue-50' : ''}
+        ${hasFile ? 'border-solid border-green-300 bg-green-50' : ''}
+      `}
+    >
+      <div className="flex items-start justify-between">
+        {/* Left side - Content justified left */}
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-1">
+            <h3 className="font-medium text-slate-700">{title}</h3>
+            {hasFile && <Check className="h-4 w-4 text-green-500" />}
           </div>
-        ) : (
-          // No file - show upload area
-          <div className="w-full h-full flex flex-col items-center justify-center text-center p-4">
-            <div className="mb-3">
-              <Plus className="h-8 w-8 text-slate-400 mx-auto mb-2" />
-              <IconComponent className={`h-6 w-6 ${iconColor} mx-auto`} />
+          <p className="text-sm text-slate-500 mb-3">{description}</p>
+          
+          {onUseTableNameChange && (
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id={`${category}-useTableName`}
+                checked={useTableName}
+                onCheckedChange={(checked) => onUseTableNameChange(!!checked)}
+              />
+              <Label htmlFor={`${category}-useTableName`} className="text-xs text-slate-600">
+                Use table name as filename
+              </Label>
             </div>
-            <p className="text-sm font-medium text-slate-700 mb-1">
-              {getButtonText()}
-            </p>
-            <p className="text-xs text-slate-500">
-              Drag & drop or click to browse
-            </p>
-          </div>
-        )}
-      </div>
-
-      {/* Use table name checkbox */}
-      {onUseTableNameChange && (
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            id={`${category}-useTableName`}
-            checked={useTableName}
-            onCheckedChange={(checked) => onUseTableNameChange(!!checked)}
-          />
-          <Label htmlFor={`${category}-useTableName`} className="text-xs text-slate-600">
-            Use table name as filename
-          </Label>
+          )}
         </div>
-      )}
+        
+        {/* Right side - Upload area with hover functionality */}
+        <div 
+          {...getRootProps()}
+          className="relative ml-4"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          <input {...getInputProps()} />
+          
+          {hasFile && uploadedFile ? (
+            <div className="relative w-20 h-20 rounded-lg overflow-hidden border-2 border-slate-200">
+              {uploadedFile.type.startsWith('image/') ? (
+                <img
+                  src={URL.createObjectURL(uploadedFile)}
+                  alt="Uploaded file"
+                  className="w-full h-full object-cover"
+                />
+              ) : uploadedFile.type.startsWith('video/') ? (
+                <video
+                  src={URL.createObjectURL(uploadedFile)}
+                  className="w-full h-full object-cover"
+                  muted
+                />
+              ) : (
+                <div className="w-full h-full bg-slate-100 flex items-center justify-center">
+                  <IconComponent className={`h-6 w-6 ${iconColor}`} />
+                </div>
+              )}
+              
+              {/* Hover overlay with remove button */}
+              {isHovered && onRemoveFile && (
+                <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                  <button
+                    onClick={handleRemoveFile}
+                    className="absolute top-1 right-1 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="w-20 h-20 bg-slate-100 rounded-lg border-2 border-dashed border-slate-300 flex flex-col items-center justify-center hover:border-blue-400 transition-colors">
+              <Plus className="h-5 w-5 text-slate-400 mb-1" />
+              <IconComponent className={`h-4 w-4 ${iconColor}`} />
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
