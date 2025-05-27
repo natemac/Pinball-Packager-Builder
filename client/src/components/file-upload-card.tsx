@@ -186,7 +186,7 @@ export default function FileUploadCard({
             <Button
               variant="outline"
               onClick={open}
-              className="p-3 pl-[75px] pr-[75px] pt-[47px] pb-[47px] mt-[-9px] mb-[-9px] ml-[-5px] mr-[-5px] overflow-hidden"
+              className="relative p-3 pl-[75px] pr-[75px] pt-[47px] pb-[47px] mt-[-9px] mb-[-9px] ml-[-5px] mr-[-5px] overflow-hidden"
             >
               {createThumbnail(uploadedFile)}
             </Button>
