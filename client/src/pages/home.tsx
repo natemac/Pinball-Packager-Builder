@@ -339,6 +339,7 @@ export default function Home() {
                           onUseTableNameChange={(use) => handleUseTableNameChange('scripts', use)}
                           category="scripts"
                           hasFile={hasFileForCategory('scripts')}
+                          uploadedFile={getFileForCategory('scripts')}
                         />
                       </div>
                     </div>
