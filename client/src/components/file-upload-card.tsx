@@ -38,7 +38,7 @@ export default function FileUploadCard({
   onFileUpload,
   acceptedTypes,
   compact = false,
-  useTableName = true,
+  useTableName = category === 'music' || category === 'scripts' ? false : true,
   onUseTableNameChange,
   category
 }: FileUploadCardProps) {
