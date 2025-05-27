@@ -245,10 +245,6 @@ export default function Home() {
                     category="cover"
                     hasFile={hasFileForCategory('cover')}
                     uploadedFile={getFileForCategory('cover')}
-                    onRemoveFile={() => {
-                      const fileToRemove = additionalFiles.find(f => f.category === 'cover');
-                      if (fileToRemove) removeAdditionalFile(fileToRemove.id);
-                    }}
                   />
 
                   <FileUploadCard
@@ -262,10 +258,6 @@ export default function Home() {
                     category="topper"
                     hasFile={hasFileForCategory('topper')}
                     uploadedFile={getFileForCategory('topper')}
-                    onRemoveFile={() => {
-                      const fileToRemove = additionalFiles.find(f => f.category === 'topper');
-                      if (fileToRemove) removeAdditionalFile(fileToRemove.id);
-                    }}
                   />
 
                   <FileUploadCard
@@ -279,10 +271,6 @@ export default function Home() {
                     category="tableVideo"
                     hasFile={hasFileForCategory('tableVideo')}
                     uploadedFile={getFileForCategory('tableVideo')}
-                    onRemoveFile={() => {
-                      const fileToRemove = additionalFiles.find(f => f.category === 'tableVideo');
-                      if (fileToRemove) removeAdditionalFile(fileToRemove.id);
-                    }}
                   />
 
                   <FileUploadCard
@@ -296,10 +284,6 @@ export default function Home() {
                     category="marqueeVideo"
                     hasFile={hasFileForCategory('marqueeVideo')}
                     uploadedFile={getFileForCategory('marqueeVideo')}
-                    onRemoveFile={() => {
-                      const fileToRemove = additionalFiles.find(f => f.category === 'marqueeVideo');
-                      if (fileToRemove) removeAdditionalFile(fileToRemove.id);
-                    }}
                   />
                 </div>
 

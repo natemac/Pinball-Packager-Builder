@@ -1,9 +1,9 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Image, Video, Music, Code, Plus, Check, X } from "lucide-react";
+import { Image, Video, Music, Code, Plus, Check } from "lucide-react";
 
 interface FileUploadCardProps {
   title: string;
@@ -17,7 +17,6 @@ interface FileUploadCardProps {
   category?: string;
   hasFile?: boolean;
   uploadedFile?: File;
-  onRemoveFile?: () => void;
 }
 
 const iconMap = {
@@ -45,10 +44,8 @@ export default function FileUploadCard({
   useTableName,
   onUseTableNameChange,
   hasFile = false,
-  uploadedFile,
-  onRemoveFile
+  uploadedFile
 }: FileUploadCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
   const IconComponent = iconMap[icon];
   const iconColor = iconColorMap[icon];
 
@@ -130,21 +127,44 @@ export default function FileUploadCard({
     );
   }
 
-  const handleRemoveFile = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (onRemoveFile) {
-      onRemoveFile();
+  // Helper function to create thumbnail preview
+  const createThumbnail = (file: File) => {
+    if (file.type.startsWith('image/')) {
+      return (
+        <img
+          src={URL.createObjectURL(file)}
+          alt="Thumbnail"
+          className="w-16 h-16 object-cover rounded-lg border border-slate-200"
+        />
+      );
+    } else if (file.type.startsWith('video/')) {
+      return (
+        <video
+          src={URL.createObjectURL(file)}
+          className="w-16 h-16 object-cover rounded-lg border border-slate-200"
+          muted
+        />
+      );
+    } else {
+      return (
+        <div className="w-16 h-16 bg-slate-100 rounded-lg border border-slate-200 flex items-center justify-center">
+          <IconComponent className={`h-6 w-6 ${iconColor}`} />
+        </div>
+      );
     }
   };
 
   return (
     <div
+      {...getRootProps()}
       className={`
         border-2 border-dashed border-slate-300 rounded-lg p-6 hover:border-blue-400 transition-colors cursor-pointer
         ${isDragActive ? 'border-blue-500 bg-blue-50' : ''}
         ${hasFile ? 'border-solid border-green-300 bg-green-50' : ''}
       `}
     >
+      <input {...getInputProps()} />
+      
       <div className="flex items-start justify-between">
         {/* Left side - Content justified left */}
         <div className="flex-1">
@@ -168,52 +188,34 @@ export default function FileUploadCard({
           )}
         </div>
         
-        {/* Right side - Upload area with hover functionality */}
-        <div 
-          {...getRootProps()}
-          className="relative ml-4"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
-          <input {...getInputProps()} />
-          
+        {/* Right side - Thumbnail or Upload Button */}
+        <div className="flex flex-col items-center gap-3 ml-4">
           {hasFile && uploadedFile ? (
-            <div className="relative w-20 h-20 rounded-lg overflow-hidden border-2 border-slate-200">
-              {uploadedFile.type.startsWith('image/') ? (
-                <img
-                  src={URL.createObjectURL(uploadedFile)}
-                  alt="Uploaded file"
-                  className="w-full h-full object-cover"
-                />
-              ) : uploadedFile.type.startsWith('video/') ? (
-                <video
-                  src={URL.createObjectURL(uploadedFile)}
-                  className="w-full h-full object-cover"
-                  muted
-                />
-              ) : (
-                <div className="w-full h-full bg-slate-100 flex items-center justify-center">
-                  <IconComponent className={`h-6 w-6 ${iconColor}`} />
-                </div>
-              )}
-              
-              {/* Hover overlay with remove button */}
-              {isHovered && onRemoveFile && (
-                <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                  <button
-                    onClick={handleRemoveFile}
-                    className="absolute top-1 right-1 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors"
-                  >
-                    <X className="h-3 w-3" />
-                  </button>
-                </div>
-              )}
-            </div>
+            <>
+              {createThumbnail(uploadedFile)}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={open}
+                className="text-xs"
+              >
+                Replace
+              </Button>
+            </>
           ) : (
-            <div className="w-20 h-20 bg-slate-100 rounded-lg border-2 border-dashed border-slate-300 flex flex-col items-center justify-center hover:border-blue-400 transition-colors">
-              <Plus className="h-5 w-5 text-slate-400 mb-1" />
-              <IconComponent className={`h-4 w-4 ${iconColor}`} />
-            </div>
+            <>
+              <div className="w-16 h-16 bg-slate-100 rounded-lg border-2 border-dashed border-slate-300 flex items-center justify-center hover:border-blue-400 transition-colors">
+                <Plus className="h-6 w-6 text-slate-400" />
+              </div>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={open}
+                className="text-xs"
+              >
+                {getButtonText()}
+              </Button>
+            </>
           )}
         </div>
       </div>
