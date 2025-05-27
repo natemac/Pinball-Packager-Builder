@@ -255,10 +255,10 @@ export default function Home() {
 
                   <FileUploadCard
                     title="Table Video"
-                    description="Gameplay video (.mp4, .avi)"
+                    description="Gameplay video/image (.mp4, .jpg, .png)"
                     icon="video"
                     onFileUpload={(file) => handleAdditionalFileUpload(file, 'tableVideo')}
-                    acceptedTypes={['.mp4', '.avi', '.mov']}
+                    acceptedTypes={['.mp4', '.jpg', '.png']}
                     useTableName={settings.fileSettings.tableVideo.useTableName}
                     onUseTableNameChange={(use) => handleUseTableNameChange('tableVideo', use)}
                     category="tableVideo"
