@@ -255,10 +255,10 @@ export default function Home() {
 
                   <FileUploadCard
                     title="Table Video"
-                    description="Gameplay video/image (.mp4, .jpg, .png)"
+                    description="Gameplay video/image (.mp4, .webm, .mov, .avi, .wmv, .flv, .mkv, .jpg, .png)"
                     icon="video"
                     onFileUpload={(file) => handleAdditionalFileUpload(file, 'tableVideo')}
-                    acceptedTypes={['.mp4', '.jpg', '.png']}
+                    acceptedTypes={['.mp4', '.webm', '.mov', '.avi', '.wmv', '.flv', '.mkv', '.jpg', '.png']}
                     useTableName={settings.fileSettings.tableVideo.useTableName}
                     onUseTableNameChange={(use) => handleUseTableNameChange('tableVideo', use)}
                     category="tableVideo"
@@ -267,10 +267,10 @@ export default function Home() {
 
                   <FileUploadCard
                     title="Marquee Video"
-                    description="Backglass Menu Video (.mp4)"
+                    description="Backglass Menu Video (.mp4, .webm, .mov, .avi, .wmv, .flv, .mkv)"
                     icon="video"
                     onFileUpload={(file) => handleAdditionalFileUpload(file, 'marqueeVideo')}
-                    acceptedTypes={['.mp4', '.avi', '.mov']}
+                    acceptedTypes={['.mp4', '.webm', '.mov', '.avi', '.wmv', '.flv', '.mkv']}
                     useTableName={settings.fileSettings.marqueeVideo.useTableName}
                     onUseTableNameChange={(use) => handleUseTableNameChange('marqueeVideo', use)}
                     category="marqueeVideo"
