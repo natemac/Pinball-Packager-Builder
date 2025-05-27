@@ -46,12 +46,9 @@ export default function DragDropZone({ onFileUpload, acceptedTypes, tableFile }:
         <input {...getInputProps()} />
         <CloudUpload className="h-8 w-8 text-slate-400 mx-auto mb-2" />
         <p className="font-medium text-slate-700 mb-1">Drop your table file here</p>
-        <p className="text-xs text-slate-500 mb-3">
+        <p className="text-xs text-slate-500">
           Supports .vpx (Visual Pinball X) and .fp (Future Pinball) files
         </p>
-        <Button onClick={open} size="sm" className="bg-blue-600 hover:bg-blue-700">
-          Choose File
-        </Button>
       </div>
 
       {/* File Detection Result */}
