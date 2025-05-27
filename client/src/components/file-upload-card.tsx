@@ -134,20 +134,20 @@ export default function FileUploadCard({
         <img
           src={URL.createObjectURL(file)}
           alt="Thumbnail"
-          className="w-full h-full object-cover rounded-lg"
+          className="w-20 h-12 object-cover rounded-lg border border-slate-200"
         />
       );
     } else if (file.type.startsWith('video/')) {
       return (
         <video
           src={URL.createObjectURL(file)}
-          className="w-full h-full object-cover rounded-lg"
+          className="w-20 h-12 object-cover rounded-lg border border-slate-200"
           muted
         />
       );
     } else {
       return (
-        <div className="w-full h-full bg-slate-100 rounded-lg border border-slate-200 flex items-center justify-center">
+        <div className="w-20 h-12 bg-slate-100 rounded-lg border border-slate-200 flex items-center justify-center">
           <IconComponent className={`h-6 w-6 ${iconColor}`} />
         </div>
       );
@@ -194,7 +194,7 @@ export default function FileUploadCard({
             <Button
               variant="outline"
               onClick={open}
-              className="flex flex-col items-center gap-2 p-3 h-auto min-h-[4rem] ml-[0px] mr-[0px] pl-[40px] pr-[40px] pt-[20px] pb-[20px]"
+              className="flex flex-col items-center gap-2 p-3 h-auto min-h-[4rem] pl-[0px] pr-[0px] pt-[0px] pb-[0px] ml-[0px] mr-[0px]"
             >
               {createThumbnail(uploadedFile)}
             </Button>
@@ -202,7 +202,7 @@ export default function FileUploadCard({
             <Button
               variant="secondary"
               onClick={open}
-              className="p-3 pt-[40px] pb-[40px] pl-[60px] pr-[60px]"
+              className="p-3 pt-[40px] pb-[40px] pl-[40px] pr-[40px]"
             >
               <Plus className="h-6 w-6 text-slate-400" />
             </Button>
