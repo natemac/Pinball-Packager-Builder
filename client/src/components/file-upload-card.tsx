@@ -188,34 +188,28 @@ export default function FileUploadCard({
           )}
         </div>
         
-        {/* Right side - Thumbnail or Upload Button */}
+        {/* Right side - Combined Upload Button */}
         <div className="flex flex-col items-center gap-3 ml-4">
           {hasFile && uploadedFile ? (
-            <>
+            <Button
+              variant="outline"
+              onClick={open}
+              className="flex flex-col items-center gap-2 p-3 h-auto"
+            >
               {createThumbnail(uploadedFile)}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={open}
-                className="text-xs"
-              >
-                Replace
-              </Button>
-            </>
+              <span className="text-xs">Replace</span>
+            </Button>
           ) : (
-            <>
-              <div className="w-16 h-16 bg-slate-100 rounded-lg border border-slate-200 flex items-center justify-center hover:border-blue-300 transition-colors">
+            <Button
+              variant="secondary"
+              onClick={open}
+              className="flex flex-col items-center gap-2 p-3 h-auto"
+            >
+              <div className="w-16 h-16 bg-slate-100 rounded-lg border border-slate-200 flex items-center justify-center">
                 <Plus className="h-6 w-6 text-slate-400" />
               </div>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={open}
-                className="text-xs"
-              >
-                {getButtonText()}
-              </Button>
-            </>
+              <span className="text-xs">{getButtonText()}</span>
+            </Button>
           )}
         </div>
       </div>
