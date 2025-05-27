@@ -26,7 +26,7 @@ export default function DragDropZone({ onFileUpload, acceptedTypes, tableFile }:
       'application/octet-stream': acceptedTypes,
     },
     multiple: false,
-    noClick: true,
+    noClick: false,
     onDragEnter: () => setDragActive(true),
     onDragLeave: () => setDragActive(false),
   });
