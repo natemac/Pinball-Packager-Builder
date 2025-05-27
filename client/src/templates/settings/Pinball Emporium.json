@@ -34,19 +34,19 @@
       "useTableName": true,
       "prefix": "",
       "suffix": "",
-      "location": "Collection\\Visual Pinball X\\Tables"
+      "location": "emulators\\Visual Pinball X\\Tables"
     },
     "music": {
       "useTableName": true,
       "prefix": "",
       "suffix": "",
-      "location": "Collection\\Visual Pinball X\\Music"
+      "location": "emulators\\Visual Pinball X\\Music"
     },
     "scripts": {
       "useTableName": true,
       "prefix": "",
       "suffix": "",
-      "location": "Collection\\Visual Pinball X\\Scripts"
+      "location": "emulators\\Visual Pinball X\\Scripts"
     }
   }
 }
