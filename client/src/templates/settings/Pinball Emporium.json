@@ -10,13 +10,13 @@
       "useTableName": true,
       "prefix": "",
       "suffix": "",
-      "location": "Collection\\VPinball\\VisualPinball\\Tables"
+      "location": "emulators\\Visual Pinball X\\Tables"
     },
     "cover": {
       "useTableName": true,
       "prefix": "",
       "suffix": "",
-      "location": "Collection\\Visual Pinball X\\media\\Wheel Images"
+      "location": "Collection\\Visual Pinball X\\media\\covers"
     },
     "topper": {
       "useTableName": true,
