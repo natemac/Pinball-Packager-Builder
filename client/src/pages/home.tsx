@@ -447,30 +447,7 @@ export default function Home() {
                       </div>
                     </div>
 
-                    {/* Package Compression */}
-                    <div className="border border-slate-200 rounded-lg p-3 bg-white">
-                      <h4 className="font-medium text-slate-900 mb-3">Package Compression</h4>
-                      <div>
-                        <Label htmlFor="compressionLevel" className="text-sm font-medium">
-                          ZIP Compression Level
-                        </Label>
-                        <Select
-                          value={settings.compressionLevel}
-                          onValueChange={(value: PackageSettings['compressionLevel']) => 
-                            updateSettings({ ...settings, compressionLevel: value })
-                          }
-                        >
-                          <SelectTrigger className="mt-1">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="low">Low</SelectItem>
-                            <SelectItem value="normal">Normal</SelectItem>
-                            <SelectItem value="high">High</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
+
                   </div>
                 </div>
 
