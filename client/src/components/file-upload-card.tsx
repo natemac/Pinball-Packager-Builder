@@ -3,7 +3,7 @@ import { useDropzone } from "react-dropzone";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Image, Video, Music, Code, Plus } from "lucide-react";
+import { Image, Video, Music, Code, Plus, Check } from "lucide-react";
 
 interface FileUploadCardProps {
   title: string;
@@ -15,6 +15,7 @@ interface FileUploadCardProps {
   useTableName?: boolean;
   onUseTableNameChange?: (use: boolean) => void;
   category?: string;
+  hasFile?: boolean;
 }
 
 const iconMap = {
@@ -38,12 +39,27 @@ export default function FileUploadCard({
   onFileUpload,
   acceptedTypes,
   compact = false,
-  useTableName = category === 'music' || category === 'scripts' ? false : true,
+  category,
+  useTableName,
   onUseTableNameChange,
-  category
+  hasFile = false
 }: FileUploadCardProps) {
   const IconComponent = iconMap[icon];
   const iconColor = iconColorMap[icon];
+
+  // Get custom button text based on category
+  const getButtonText = () => {
+    switch (category) {
+      case 'directb2s':
+        return '+ Add DirectB2S File';
+      case 'music':
+        return '+ Add Music Folder';
+      case 'scripts':
+        return '+ Add Script Files';
+      default:
+        return `+ Add ${title}`;
+    }
+  };
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
@@ -73,11 +89,14 @@ export default function FileUploadCard({
       >
         <input {...getInputProps()} />
         <div className="flex items-center justify-between mb-3">
-          <div>
+          <div className="flex items-center gap-2">
             <h3 className="font-medium text-slate-700">{title}</h3>
-            <p className="text-xs text-slate-500">{description}</p>
+            {hasFile && <Check className="h-4 w-4 text-green-500" />}
           </div>
-          <IconComponent className={`h-4 w-4 ${iconColor}`} />
+          <div>
+            <IconComponent className={`h-4 w-4 ${iconColor}`} />
+            <p className="text-xs text-slate-500 mt-1">{description}</p>
+          </div>
         </div>
         <div className="flex items-center justify-between">
           <Button
@@ -86,8 +105,7 @@ export default function FileUploadCard({
             onClick={open}
             className="flex-shrink-0"
           >
-            <Plus className="h-3 w-3 mr-1" />
-            Add
+            {getButtonText()}
           </Button>
           
           {onUseTableNameChange && (
@@ -118,7 +136,10 @@ export default function FileUploadCard({
       <input {...getInputProps()} />
       <div className="flex items-center justify-between mb-3">
         <div>
-          <h3 className="font-medium text-slate-700">{title}</h3>
+          <div className="flex items-center gap-2">
+            <h3 className="font-medium text-slate-700">{title}</h3>
+            {hasFile && <Check className="h-4 w-4 text-green-500" />}
+          </div>
           <p className="text-xs text-slate-500">{description}</p>
         </div>
         <IconComponent className={`h-5 w-5 ${iconColor}`} />
@@ -129,8 +150,7 @@ export default function FileUploadCard({
           onClick={open}
           className="flex-shrink-0"
         >
-          <Plus className="h-4 w-4 mr-2" />
-          Add {title}
+          {getButtonText()}
         </Button>
         
         {onUseTableNameChange && (
