@@ -77,28 +77,30 @@ export default function FileUploadCard({
           <IconComponent className={`h-4 w-4 ${iconColor}`} />
         </div>
         <p className="text-sm text-slate-500 mb-3">{description}</p>
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={open}
-          className="w-full mb-3"
-        >
-          <Plus className="h-3 w-3 mr-1" />
-          Add
-        </Button>
-        
-        {onUseTableNameChange && (
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id={`${category}-useTableName`}
-              checked={useTableName}
-              onCheckedChange={(checked) => onUseTableNameChange(!!checked)}
-            />
-            <Label htmlFor={`${category}-useTableName`} className="text-xs text-slate-600">
-              Use table name as filename
-            </Label>
-          </div>
-        )}
+        <div className="flex items-center justify-between">
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={open}
+            className="flex-shrink-0"
+          >
+            <Plus className="h-3 w-3 mr-1" />
+            Add
+          </Button>
+          
+          {onUseTableNameChange && (
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id={`${category}-useTableName`}
+                checked={useTableName}
+                onCheckedChange={(checked) => onUseTableNameChange(!!checked)}
+              />
+              <Label htmlFor={`${category}-useTableName`} className="text-xs text-slate-600">
+                Use table name as filename
+              </Label>
+            </div>
+          )}
+        </div>
       </div>
     );
   }
@@ -117,27 +119,29 @@ export default function FileUploadCard({
         <IconComponent className={`h-5 w-5 ${iconColor}`} />
       </div>
       <p className="text-sm text-slate-500 mb-3">{description}</p>
-      <Button
-        variant="secondary"
-        onClick={open}
-        className="w-full mb-3"
-      >
-        <Plus className="h-4 w-4 mr-2" />
-        Add {title}
-      </Button>
-      
-      {onUseTableNameChange && (
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            id={`${category}-useTableName`}
-            checked={useTableName}
-            onCheckedChange={(checked) => onUseTableNameChange(!!checked)}
-          />
-          <Label htmlFor={`${category}-useTableName`} className="text-xs text-slate-600">
-            Use table name as filename
-          </Label>
-        </div>
-      )}
+      <div className="flex items-center justify-between">
+        <Button
+          variant="secondary"
+          onClick={open}
+          className="flex-shrink-0"
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          Add {title}
+        </Button>
+        
+        {onUseTableNameChange && (
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id={`${category}-useTableName`}
+              checked={useTableName}
+              onCheckedChange={(checked) => onUseTableNameChange(!!checked)}
+            />
+            <Label htmlFor={`${category}-useTableName`} className="text-xs text-slate-600">
+              Use table name as filename
+            </Label>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
