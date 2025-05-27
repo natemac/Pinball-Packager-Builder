@@ -72,13 +72,11 @@ export default function FileUploadCard({
         `}
       >
         <input {...getInputProps()} />
-        <div className="flex items-center justify-between mb-3">
-          <div>
-            <h3 className="font-medium text-slate-700">{title}</h3>
-            <p className="text-xs text-slate-500">{description}</p>
-          </div>
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="font-medium text-slate-700">{title}</h3>
           <IconComponent className={`h-4 w-4 ${iconColor}`} />
         </div>
+        <p className="text-sm text-slate-500 mb-3">{description}</p>
         <div className="flex items-center justify-between">
           <Button
             variant="secondary"
@@ -116,13 +114,11 @@ export default function FileUploadCard({
       `}
     >
       <input {...getInputProps()} />
-      <div className="flex items-center justify-between mb-3">
-        <div>
-          <h3 className="font-medium text-slate-700">{title}</h3>
-          <p className="text-xs text-slate-500">{description}</p>
-        </div>
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="font-medium text-slate-700">{title}</h3>
         <IconComponent className={`h-5 w-5 ${iconColor}`} />
       </div>
+      <p className="text-sm text-slate-500 mb-3">{description}</p>
       <div className="flex items-center justify-between">
         <Button
           variant="secondary"
