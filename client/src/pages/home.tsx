@@ -92,6 +92,11 @@ export default function Home() {
     });
   };
 
+  // Helper function to check if files exist for a specific category
+  const hasFileForCategory = (category: AdditionalFile['category']) => {
+    return additionalFiles.some(file => file.category === category);
+  };
+
   const handleGeneratePackage = async () => {
     if (!tableFile) {
       toast({
@@ -232,6 +237,7 @@ export default function Home() {
                     useTableName={settings.fileSettings.cover.useTableName}
                     onUseTableNameChange={(use) => handleUseTableNameChange('cover', use)}
                     category="cover"
+                    hasFile={hasFileForCategory('cover')}
                   />
 
                   <FileUploadCard
@@ -243,6 +249,7 @@ export default function Home() {
                     useTableName={settings.fileSettings.topper.useTableName}
                     onUseTableNameChange={(use) => handleUseTableNameChange('topper', use)}
                     category="topper"
+                    hasFile={hasFileForCategory('topper')}
                   />
 
                   <FileUploadCard
@@ -254,6 +261,7 @@ export default function Home() {
                     useTableName={settings.fileSettings.tableVideo.useTableName}
                     onUseTableNameChange={(use) => handleUseTableNameChange('tableVideo', use)}
                     category="tableVideo"
+                    hasFile={hasFileForCategory('tableVideo')}
                   />
 
                   <FileUploadCard
@@ -265,6 +273,7 @@ export default function Home() {
                     useTableName={settings.fileSettings.marqueeVideo.useTableName}
                     onUseTableNameChange={(use) => handleUseTableNameChange('marqueeVideo', use)}
                     category="marqueeVideo"
+                    hasFile={hasFileForCategory('marqueeVideo')}
                   />
                 </div>
 
@@ -287,6 +296,7 @@ export default function Home() {
                           useTableName={settings.fileSettings.directb2s.useTableName}
                           onUseTableNameChange={(use) => handleUseTableNameChange('directb2s', use)}
                           category="directb2s"
+                          hasFile={hasFileForCategory('directb2s')}
                         />
                       </div>
 
@@ -301,6 +311,7 @@ export default function Home() {
                           useTableName={settings.fileSettings.music.useTableName}
                           onUseTableNameChange={(use) => handleUseTableNameChange('music', use)}
                           category="music"
+                          hasFile={hasFileForCategory('music')}
                         />
                       </div>
 
@@ -315,6 +326,7 @@ export default function Home() {
                           useTableName={settings.fileSettings.scripts.useTableName}
                           onUseTableNameChange={(use) => handleUseTableNameChange('scripts', use)}
                           category="scripts"
+                          hasFile={hasFileForCategory('scripts')}
                         />
                       </div>
                     </div>
