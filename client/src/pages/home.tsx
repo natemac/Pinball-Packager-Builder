@@ -505,19 +505,19 @@ export default function Home() {
                   <Button
                     variant="ghost"
                     className="w-full justify-start"
-                    onClick={clearAll}
+                    onClick={() => setShowSettings(true)}
                   >
-                    <span className="mr-3">🔄</span>
-                    Clear All Files
+                    <Settings className="h-4 w-4 mr-3" />
+                    File Locations
                   </Button>
 
                   <Button
                     variant="ghost"
                     className="w-full justify-start"
-                    onClick={() => setShowSettings(true)}
+                    onClick={clearAll}
                   >
-                    <Settings className="h-4 w-4 mr-3" />
-                    File Locations
+                    <span className="mr-3">🔄</span>
+                    Clear All Files
                   </Button>
                 </div>
               </CardContent>
