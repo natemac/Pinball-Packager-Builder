@@ -194,7 +194,7 @@ export default function FileUploadCard({
             <Button
               variant="outline"
               onClick={open}
-              className="p-2"
+              className="flex flex-col items-center gap-2 p-3 h-auto min-h-[4rem]"
             >
               {createThumbnail(uploadedFile)}
             </Button>
