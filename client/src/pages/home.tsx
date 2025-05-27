@@ -18,6 +18,7 @@ import PackageStructure from "@/components/package-structure";
 import AddedFilesList from "@/components/added-files-list";
 import SettingsModal from "@/components/settings-modal";
 import { useFileProcessor } from "@/hooks/use-file-processor";
+import { getTemplate } from "@/lib/settings-templates";
 import type { TableFile, AdditionalFile, PackageSettings } from "@shared/schema";
 
 export default function Home() {
@@ -465,6 +466,42 @@ export default function Home() {
                 </h3>
 
                 <div className="space-y-3">
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start"
+                    onClick={() => {
+                      const template = getTemplate('pinball-emporium');
+                      if (template) {
+                        updateSettings(template);
+                        toast({
+                          title: "Template Applied",
+                          description: "Pinball Emporium settings have been applied.",
+                        });
+                      }
+                    }}
+                  >
+                    <span className="mr-3">⚙️</span>
+                    File defaults for Pinball Emporium
+                  </Button>
+
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start"
+                    onClick={() => {
+                      const template = getTemplate('pinup-popper');
+                      if (template) {
+                        updateSettings(template);
+                        toast({
+                          title: "Template Applied",
+                          description: "PinUP Popper settings have been applied.",
+                        });
+                      }
+                    }}
+                  >
+                    <span className="mr-3">⚙️</span>
+                    File defaults for PinUP Popper
+                  </Button>
+
                   <Button
                     variant="ghost"
                     className="w-full justify-start"
