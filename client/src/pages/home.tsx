@@ -522,6 +522,27 @@ export default function Home() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Content Creator */}
+            <Card>
+              <CardContent className="p-6">
+                <h3 className="font-semibold text-slate-900 mb-4 flex items-center">
+                  <span className="text-lg mr-2">🎨</span>
+                  Content Creator
+                </h3>
+
+                <div className="space-y-3">
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start"
+                    onClick={() => window.open('https://express.adobe.com/publishedV2/urn:aaid:sc:US:3cdb3532-3dbd-4e2c-9a1f-b75007ecea8d?promoid=Y69SGM5H&mv=other', '_blank')}
+                  >
+                    <span className="mr-3">📹</span>
+                    Marquee Video
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
