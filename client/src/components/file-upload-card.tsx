@@ -15,7 +15,6 @@ interface FileUploadCardProps {
   useTableName?: boolean;
   onUseTableNameChange?: (use: boolean) => void;
   category?: string;
-  uploadedFile?: File | null;
 }
 
 const iconMap = {
@@ -41,8 +40,7 @@ export default function FileUploadCard({
   compact = false,
   useTableName = category === 'music' || category === 'scripts' ? false : true,
   onUseTableNameChange,
-  category,
-  uploadedFile
+  category
 }: FileUploadCardProps) {
   const IconComponent = iconMap[icon];
   const iconColor = iconColorMap[icon];
@@ -89,7 +87,7 @@ export default function FileUploadCard({
             className="flex-shrink-0"
           >
             <Plus className="h-3 w-3 mr-1" />
-            {uploadedFile ? uploadedFile.name : 'Add'}
+            Add
           </Button>
           
           {onUseTableNameChange && (
@@ -132,7 +130,7 @@ export default function FileUploadCard({
           className="flex-shrink-0"
         >
           <Plus className="h-4 w-4 mr-2" />
-          {uploadedFile ? uploadedFile.name : `Add ${title}`}
+          Add {title}
         </Button>
         
         {onUseTableNameChange && (
