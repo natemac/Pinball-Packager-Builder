@@ -219,8 +219,7 @@ export default function Home() {
                   <div className={`w-8 h-8 ${tableFile ? 'bg-blue-600' : 'bg-slate-300'} text-white rounded-full flex items-center justify-center text-sm font-bold mr-3`}>
                     2
                   </div>
-                  <h2 className="text-lg font-semibold text-slate-900">Add Additional Files</h2>
-                  <span className="ml-auto text-sm text-slate-500">Optional</span>
+                  <h2 className="text-lg font-semibold text-slate-900">Frontend Files</h2>
                 </div>
 
                 <div className="space-y-4">
