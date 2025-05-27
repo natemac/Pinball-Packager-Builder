@@ -100,10 +100,25 @@ export default function SettingsModal({
           
           // Extract template name and settings
           const templateName = parsed.templateName || 'Custom Upload';
-          const { templateName: _, ...settingsOnly } = parsed;
+          const { templateName: _, ...templateData } = parsed;
+          
+          // Handle nested fileSettings structure from JSON templates
+          let processedSettings: PackageSettings;
+          if (templateData.fileSettings.tableFileSettings) {
+            // New nested structure - extract tableFileSettings and move other fileSettings up
+            const { tableFileSettings, ...otherFileSettings } = templateData.fileSettings;
+            processedSettings = {
+              ...templateData,
+              tableFileSettings,
+              fileSettings: otherFileSettings
+            } as PackageSettings;
+          } else {
+            // Flat structure - use as-is
+            processedSettings = templateData as PackageSettings;
+          }
           
           // Update settings
-          setLocalSettings(settingsOnly as PackageSettings);
+          setLocalSettings(processedSettings);
           
           // Create a unique template ID based on the template name
           const templateId = templateName.toLowerCase().replace(/\s+/g, '-');
