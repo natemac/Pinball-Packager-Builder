@@ -98,6 +98,11 @@ export default function Home() {
     return additionalFiles.some(file => file.category === category);
   };
 
+  // Helper function to get uploaded file by category
+  const getFileForCategory = (category: AdditionalFile['category']) => {
+    return additionalFiles.find(file => file.category === category)?.file;
+  };
+
   const handleGeneratePackage = async () => {
     if (!tableFile) {
       toast({
@@ -239,6 +244,7 @@ export default function Home() {
                     onUseTableNameChange={(use) => handleUseTableNameChange('cover', use)}
                     category="cover"
                     hasFile={hasFileForCategory('cover')}
+                    uploadedFile={getFileForCategory('cover')}
                   />
 
                   <FileUploadCard
@@ -251,6 +257,7 @@ export default function Home() {
                     onUseTableNameChange={(use) => handleUseTableNameChange('topper', use)}
                     category="topper"
                     hasFile={hasFileForCategory('topper')}
+                    uploadedFile={getFileForCategory('topper')}
                   />
 
                   <FileUploadCard
@@ -263,6 +270,7 @@ export default function Home() {
                     onUseTableNameChange={(use) => handleUseTableNameChange('tableVideo', use)}
                     category="tableVideo"
                     hasFile={hasFileForCategory('tableVideo')}
+                    uploadedFile={getFileForCategory('tableVideo')}
                   />
 
                   <FileUploadCard
@@ -275,6 +283,7 @@ export default function Home() {
                     onUseTableNameChange={(use) => handleUseTableNameChange('marqueeVideo', use)}
                     category="marqueeVideo"
                     hasFile={hasFileForCategory('marqueeVideo')}
+                    uploadedFile={getFileForCategory('marqueeVideo')}
                   />
                 </div>
 
@@ -298,6 +307,7 @@ export default function Home() {
                           onUseTableNameChange={(use) => handleUseTableNameChange('directb2s', use)}
                           category="directb2s"
                           hasFile={hasFileForCategory('directb2s')}
+                          uploadedFile={getFileForCategory('directb2s')}
                         />
                       </div>
 
@@ -313,6 +323,7 @@ export default function Home() {
                           onUseTableNameChange={(use) => handleUseTableNameChange('music', use)}
                           category="music"
                           hasFile={hasFileForCategory('music')}
+                          uploadedFile={getFileForCategory('music')}
                         />
                       </div>
 

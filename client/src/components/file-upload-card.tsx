@@ -16,6 +16,7 @@ interface FileUploadCardProps {
   onUseTableNameChange?: (use: boolean) => void;
   category?: string;
   hasFile?: boolean;
+  uploadedFile?: File;
 }
 
 const iconMap = {
@@ -42,7 +43,8 @@ export default function FileUploadCard({
   category,
   useTableName,
   onUseTableNameChange,
-  hasFile = false
+  hasFile = false,
+  uploadedFile
 }: FileUploadCardProps) {
   const IconComponent = iconMap[icon];
   const iconColor = iconColorMap[icon];
@@ -125,46 +127,97 @@ export default function FileUploadCard({
     );
   }
 
+  // Helper function to create thumbnail preview
+  const createThumbnail = (file: File) => {
+    if (file.type.startsWith('image/')) {
+      return (
+        <img
+          src={URL.createObjectURL(file)}
+          alt="Thumbnail"
+          className="w-16 h-16 object-cover rounded-lg border border-slate-200"
+        />
+      );
+    } else if (file.type.startsWith('video/')) {
+      return (
+        <video
+          src={URL.createObjectURL(file)}
+          className="w-16 h-16 object-cover rounded-lg border border-slate-200"
+          muted
+        />
+      );
+    } else {
+      return (
+        <div className="w-16 h-16 bg-slate-100 rounded-lg border border-slate-200 flex items-center justify-center">
+          <IconComponent className={`h-6 w-6 ${iconColor}`} />
+        </div>
+      );
+    }
+  };
+
   return (
     <div
       {...getRootProps()}
       className={`
-        border border-slate-200 rounded-lg p-4 hover:border-blue-300 transition-colors cursor-pointer
-        ${isDragActive ? 'border-blue-400 bg-blue-50' : ''}
+        border-2 border-dashed border-slate-300 rounded-lg p-6 hover:border-blue-400 transition-colors cursor-pointer
+        ${isDragActive ? 'border-blue-500 bg-blue-50' : ''}
+        ${hasFile ? 'border-solid border-green-300 bg-green-50' : ''}
       `}
     >
       <input {...getInputProps()} />
-      <div className="flex items-center justify-between mb-3">
-        <div>
-          <div className="flex items-center gap-2">
+      
+      <div className="flex items-start justify-between">
+        {/* Left side - Content justified left */}
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-1">
             <h3 className="font-medium text-slate-700">{title}</h3>
             {hasFile && <Check className="h-4 w-4 text-green-500" />}
           </div>
-          <p className="text-xs text-slate-500">{description}</p>
+          <p className="text-sm text-slate-500 mb-3">{description}</p>
+          
+          {onUseTableNameChange && (
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id={`${category}-useTableName`}
+                checked={useTableName}
+                onCheckedChange={(checked) => onUseTableNameChange(!!checked)}
+              />
+              <Label htmlFor={`${category}-useTableName`} className="text-xs text-slate-600">
+                Use table name as filename
+              </Label>
+            </div>
+          )}
         </div>
-        <IconComponent className={`h-5 w-5 ${iconColor}`} />
-      </div>
-      <div className="flex items-center justify-between">
-        <Button
-          variant="secondary"
-          onClick={open}
-          className="flex-shrink-0"
-        >
-          {getButtonText()}
-        </Button>
         
-        {onUseTableNameChange && (
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id={`${category}-useTableName`}
-              checked={useTableName}
-              onCheckedChange={(checked) => onUseTableNameChange(!!checked)}
-            />
-            <Label htmlFor={`${category}-useTableName`} className="text-xs text-slate-600">
-              Use table name as filename
-            </Label>
-          </div>
-        )}
+        {/* Right side - Thumbnail or Upload Button */}
+        <div className="flex flex-col items-center gap-3 ml-4">
+          {hasFile && uploadedFile ? (
+            <>
+              {createThumbnail(uploadedFile)}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={open}
+                className="text-xs"
+              >
+                Replace
+              </Button>
+            </>
+          ) : (
+            <>
+              <div className="w-16 h-16 bg-slate-100 rounded-lg border-2 border-dashed border-slate-300 flex items-center justify-center hover:border-blue-400 transition-colors">
+                <Plus className="h-6 w-6 text-slate-400" />
+              </div>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={open}
+                className="text-xs"
+              >
+                {getButtonText()}
+              </Button>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
