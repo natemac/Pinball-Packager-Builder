@@ -13,7 +13,7 @@ export class PackageBuilder {
   }
 
   private getCompressionLevel(): 'STORE' | 'DEFLATE' {
-    return this.settings.compressionLevel === 'none' ? 'STORE' : 'DEFLATE';
+    return this.settings.compressionLevel === 'low' ? 'STORE' : 'DEFLATE';
   }
 
   private getCompressionOptions() {
@@ -48,27 +48,8 @@ export class PackageBuilder {
       return location.replace(/\\/g, '/');
     }
     
-    // Fallback to original logic
-    const gameTypeName = gameType === 'vpx' ? 'Visual Pinball X' : 'Future Pinball';
-    const basePath = `${this.settings.baseDirectory}/${gameTypeName}`;
-    
-    switch (category) {
-      case 'cover':
-        return `${basePath}/${this.settings.mediaFolder}/Covers`;
-      case 'topper':
-        return `${basePath}/${this.settings.mediaFolder}/Topper`;
-      case 'tableVideo':
-      case 'marqueeVideo':
-        return `${basePath}/${this.settings.mediaFolder}/Videos`;
-      case 'directb2s':
-        return `${basePath}/DirectB2S`;
-      case 'music':
-        return `${basePath}/${this.settings.mediaFolder}/Music`;
-      case 'scripts':
-        return `${basePath}/Scripts`;
-      default:
-        return `${basePath}/${this.settings.mediaFolder}/Other`;
-    }
+    // Return empty string if no location is set - let the settings define all paths
+    return '';
   }
 
   private getFileName(originalName: string, tableName: string, category: AdditionalFile['category']): string {
@@ -110,47 +91,50 @@ export class PackageBuilder {
 
   async addTableFile(tableFile: TableFile): Promise<void> {
     const tableFileSettings = this.settings.tableFileSettings;
-    let filePath: string;
     
-    if (tableFileSettings?.location) {
-      // Use the custom location if specified
-      let location = tableFileSettings.location;
-      
-      // Replace game type placeholder if needed
-      const gameTypeName = tableFile.type === 'vpx' ? 'Visual Pinball X' : 'Future Pinball';
-      location = location.replace(/Visual Pinball X|Future Pinball/g, gameTypeName);
-      
-      // Convert backslashes to forward slashes for consistent path handling
-      location = location.replace(/\\/g, '/');
-      
-      // Get the filename with prefix/suffix
-      let fileName = tableFile.file.name;
-      if (tableFileSettings.useTableName) {
-        const extension = tableFile.file.name.split('.').pop() || '';
-        const sanitizedTableName = sanitizeFileName(tableFile.name);
-        const prefix = tableFileSettings.prefix || '';
-        const suffix = tableFileSettings.suffix || '';
-        fileName = `${prefix}${sanitizedTableName}${suffix}.${extension}`;
-      } else {
-        const baseName = removeFileExtension(tableFile.file.name);
-        const extension = tableFile.file.name.split('.').pop() || '';
-        const prefix = tableFileSettings.prefix || '';
-        const suffix = tableFileSettings.suffix || '';
-        fileName = `${prefix}${baseName}${suffix}.${extension}`;
-      }
-      
-      filePath = `${location}/${fileName}`;
-    } else {
-      // Fallback to original logic
-      const gameTypeName = tableFile.type === 'vpx' ? 'Visual Pinball X' : 'Future Pinball';
-      filePath = `${this.settings.baseDirectory}/${gameTypeName}/${tableFile.file.name}`;
+    if (!tableFileSettings?.location) {
+      // Skip adding table file if no location is set in settings
+      return;
     }
     
+    // Use the custom location from settings
+    let location = tableFileSettings.location;
+    
+    // Replace game type placeholder if needed
+    const gameTypeName = tableFile.type === 'vpx' ? 'Visual Pinball X' : 'Future Pinball';
+    location = location.replace(/Visual Pinball X|Future Pinball/g, gameTypeName);
+    
+    // Convert backslashes to forward slashes for consistent path handling
+    location = location.replace(/\\/g, '/');
+    
+    // Get the filename with prefix/suffix
+    let fileName = tableFile.file.name;
+    if (tableFileSettings.useTableName) {
+      const extension = tableFile.file.name.split('.').pop() || '';
+      const sanitizedTableName = sanitizeFileName(tableFile.name);
+      const prefix = tableFileSettings.prefix || '';
+      const suffix = tableFileSettings.suffix || '';
+      fileName = `${prefix}${sanitizedTableName}${suffix}.${extension}`;
+    } else {
+      const baseName = removeFileExtension(tableFile.file.name);
+      const extension = tableFile.file.name.split('.').pop() || '';
+      const prefix = tableFileSettings.prefix || '';
+      const suffix = tableFileSettings.suffix || '';
+      fileName = `${prefix}${baseName}${suffix}.${extension}`;
+    }
+    
+    const filePath = `${location}/${fileName}`;
     this.zip.file(filePath, tableFile.file, this.getCompressionOptions());
   }
 
   async addAdditionalFile(file: AdditionalFile, tableName: string, gameType: 'vpx' | 'fp'): Promise<void> {
     const categoryPath = this.getCategoryPath(file.category, gameType);
+    
+    // Skip adding file if no location is set in settings
+    if (!categoryPath) {
+      return;
+    }
+    
     const fileName = this.getFileName(file.originalName, tableName, file.category);
     const filePath = `${categoryPath}/${fileName}`;
     
