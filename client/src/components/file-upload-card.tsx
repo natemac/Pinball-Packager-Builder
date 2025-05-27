@@ -134,20 +134,20 @@ export default function FileUploadCard({
         <img
           src={URL.createObjectURL(file)}
           alt="Thumbnail"
-          className="w-20 h-12 object-cover rounded-lg border border-slate-200"
+          className="w-full h-full object-cover rounded-lg"
         />
       );
     } else if (file.type.startsWith('video/')) {
       return (
         <video
           src={URL.createObjectURL(file)}
-          className="w-20 h-12 object-cover rounded-lg border border-slate-200"
+          className="w-full h-full object-cover rounded-lg"
           muted
         />
       );
     } else {
       return (
-        <div className="w-20 h-12 bg-slate-100 rounded-lg border border-slate-200 flex items-center justify-center">
+        <div className="w-full h-full bg-slate-100 rounded-lg border border-slate-200 flex items-center justify-center">
           <IconComponent className={`h-6 w-6 ${iconColor}`} />
         </div>
       );
