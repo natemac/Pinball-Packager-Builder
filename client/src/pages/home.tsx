@@ -225,7 +225,7 @@ export default function Home() {
                 <div className="space-y-4">
                   <FileUploadCard
                     title="Cover Image"
-                    description="Table cover artwork (.png, .jpg)"
+                    description="Menu Select Image (.png, .jpg)"
                     icon="image"
                     onFileUpload={(file) => handleAdditionalFileUpload(file, 'cover')}
                     acceptedTypes={['.png', '.jpg', '.jpeg']}
@@ -236,7 +236,7 @@ export default function Home() {
 
                   <FileUploadCard
                     title="Topper Image"
-                    description="Topper display image (.png, .jpg)"
+                    description="Third Screen DMD Topper Image"
                     icon="image"
                     onFileUpload={(file) => handleAdditionalFileUpload(file, 'topper')}
                     acceptedTypes={['.png', '.jpg', '.jpeg']}
@@ -258,7 +258,7 @@ export default function Home() {
 
                   <FileUploadCard
                     title="Marquee Video"
-                    description="Marquee display video (.mp4, .avi)"
+                    description="Backglass Menu Video (.mp4)"
                     icon="video"
                     onFileUpload={(file) => handleAdditionalFileUpload(file, 'marqueeVideo')}
                     acceptedTypes={['.mp4', '.avi', '.mov']}
