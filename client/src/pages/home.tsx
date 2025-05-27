@@ -457,15 +457,24 @@ export default function Home() {
               onRemoveFile={removeAdditionalFile}
             />
 
-            {/* Quick Actions */}
+            {/* File Location Setup */}
             <Card>
               <CardContent className="p-6">
                 <h3 className="font-semibold text-slate-900 mb-4 flex items-center">
                   <span className="text-lg mr-2">⚡</span>
-                  Quick Actions
+                  File Location Setup
                 </h3>
 
                 <div className="space-y-3">
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start"
+                    onClick={() => setShowSettings(true)}
+                  >
+                    <Settings className="h-4 w-4 mr-3" />
+                    Custom File Locations
+                  </Button>
+
                   <Button
                     variant="ghost"
                     className="w-full justify-start"
@@ -500,15 +509,6 @@ export default function Home() {
                   >
                     <span className="mr-3">⚙️</span>
                     File defaults for PinUP Popper
-                  </Button>
-
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start"
-                    onClick={() => setShowSettings(true)}
-                  >
-                    <Settings className="h-4 w-4 mr-3" />
-                    File Locations
                   </Button>
 
                   <Button
