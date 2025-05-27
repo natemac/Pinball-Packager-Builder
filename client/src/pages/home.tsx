@@ -422,7 +422,7 @@ export default function Home() {
                   size="lg"
                 >
                   <Download className="h-4 w-4 mr-2" />
-                  Generate & Download Package
+                  Generate Package
                 </Button>
 
                 {/* Progress Bar */}
