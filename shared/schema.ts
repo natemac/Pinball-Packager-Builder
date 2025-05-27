@@ -74,6 +74,9 @@ export interface PackageSettings {
   mediaFolder: string;
   preserveExtensions: boolean;
   convertImages: boolean;
+  convertVideos: boolean;
+  imageCompression: 'none' | 'low' | 'medium' | 'high';
+  videoCompression: 'none' | 'low' | 'medium' | 'high';
   compressionLevel: 'low' | 'normal' | 'high';
   tableFileSettings: FileLocationSettings;
   fileSettings: {

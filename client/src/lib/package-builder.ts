@@ -127,6 +127,106 @@ export class PackageBuilder {
     this.zip.file(filePath, tableFile.file, this.getCompressionOptions());
   }
 
+  private async processImageFile(file: File): Promise<File> {
+    let processedFile = file;
+    
+    // Convert to PNG if enabled
+    if (this.settings.convertImages && !file.name.toLowerCase().endsWith('.png')) {
+      try {
+        processedFile = await convertImageToPng(file);
+      } catch (error) {
+        console.warn('Failed to convert image to PNG, using original file:', error);
+      }
+    }
+    
+    // Apply image compression if enabled
+    if (this.settings.imageCompression !== 'none') {
+      try {
+        processedFile = await this.compressImage(processedFile, this.settings.imageCompression);
+      } catch (error) {
+        console.warn('Failed to compress image, using original file:', error);
+      }
+    }
+    
+    return processedFile;
+  }
+
+  private async processVideoFile(file: File): Promise<File> {
+    let processedFile = file;
+    
+    // Convert to MP4 if enabled
+    if (this.settings.convertVideos && !file.name.toLowerCase().endsWith('.mp4')) {
+      try {
+        processedFile = await this.convertVideoToMp4(file);
+      } catch (error) {
+        console.warn('Failed to convert video to MP4, using original file:', error);
+      }
+    }
+    
+    // Apply video compression if enabled
+    if (this.settings.videoCompression !== 'none') {
+      try {
+        processedFile = await this.compressVideo(processedFile, this.settings.videoCompression);
+      } catch (error) {
+        console.warn('Failed to compress video, using original file:', error);
+      }
+    }
+    
+    return processedFile;
+  }
+
+  private async compressImage(file: File, compressionLevel: 'low' | 'medium' | 'high'): Promise<File> {
+    return new Promise((resolve) => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      
+      img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        
+        if (ctx) {
+          ctx.drawImage(img, 0, 0);
+          
+          // Compression quality based on level
+          const qualityMap = {
+            low: 0.8,
+            medium: 0.6,
+            high: 0.4
+          };
+          
+          canvas.toBlob((blob) => {
+            if (blob) {
+              const compressedFile = new File([blob], file.name, { type: 'image/png' });
+              resolve(compressedFile);
+            } else {
+              resolve(file);
+            }
+          }, 'image/png', qualityMap[compressionLevel]);
+        } else {
+          resolve(file);
+        }
+      };
+      
+      img.onerror = () => resolve(file);
+      img.src = URL.createObjectURL(file);
+    });
+  }
+
+  private async convertVideoToMp4(file: File): Promise<File> {
+    // Note: Video conversion would typically require FFmpeg or similar
+    // For now, we'll return the original file as browser-based video conversion is limited
+    console.warn('Video conversion to MP4 is not yet implemented in browser environment');
+    return file;
+  }
+
+  private async compressVideo(file: File, compressionLevel: 'low' | 'medium' | 'high'): Promise<File> {
+    // Note: Video compression would typically require FFmpeg or similar
+    // For now, we'll return the original file as browser-based video compression is limited
+    console.warn('Video compression is not yet implemented in browser environment');
+    return file;
+  }
+
   async addAdditionalFile(file: AdditionalFile, tableName: string, gameType: 'vpx' | 'fp'): Promise<void> {
     const categoryPath = this.getCategoryPath(file.category, gameType);
     
@@ -140,15 +240,14 @@ export class PackageBuilder {
     
     let fileToAdd = file.file;
     
-    // Convert image to PNG if needed
-    if (this.settings.convertImages && 
-        (file.category === 'cover' || file.category === 'topper') &&
-        !file.originalName.toLowerCase().endsWith('.png')) {
-      try {
-        fileToAdd = await convertImageToPng(file.file);
-      } catch (error) {
-        console.warn('Failed to convert image to PNG, using original file:', error);
-      }
+    // Process images
+    if (file.category === 'cover' || file.category === 'topper') {
+      fileToAdd = await this.processImageFile(file.file);
+    }
+    
+    // Process videos
+    if (file.category === 'tableVideo' || file.category === 'marqueeVideo') {
+      fileToAdd = await this.processVideoFile(file.file);
     }
     
     this.zip.file(filePath, fileToAdd, this.getCompressionOptions());

@@ -45,9 +45,11 @@ const extractSettingsFromTemplate = (template: any): PackageSettings => {
     processedSettings = {
       baseDirectory: 'Collection',
       mediaFolder: 'media',
-      renameFiles: true,
       preserveExtensions: true,
       convertImages: false,
+      convertVideos: false,
+      imageCompression: 'none',
+      videoCompression: 'none',
       compressionLevel: 'normal',
       tableFileSettings: {
         useTableName: true,

@@ -362,41 +362,110 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="compressionLevel" className="text-sm font-medium">
-                        Compression Level
-                      </Label>
-                      <Select
-                        value={settings.compressionLevel}
-                        onValueChange={(value: PackageSettings['compressionLevel']) => 
-                          updateSettings({ ...settings, compressionLevel: value })
-                        }
-                      >
-                        <SelectTrigger className="mt-1">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="none">No Compression</SelectItem>
-                          <SelectItem value="fast">Fast</SelectItem>
-                          <SelectItem value="normal">Normal</SelectItem>
-                          <SelectItem value="maximum">Maximum</SelectItem>
-                        </SelectContent>
-                      </Select>
+                  {/* Convert & Compress Sections */}
+                  <div className="space-y-4 mb-4">
+                    {/* Images Section */}
+                    <div className="border border-slate-200 rounded-lg p-3 bg-white">
+                      <h4 className="font-medium text-slate-900 mb-3">Images</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="convertImages"
+                            checked={settings.convertImages}
+                            onCheckedChange={(checked) => 
+                              updateSettings({ ...settings, convertImages: !!checked })
+                            }
+                          />
+                          <Label htmlFor="convertImages" className="text-sm">
+                            Convert to PNG
+                          </Label>
+                        </div>
+                        <div>
+                          <Label htmlFor="imageCompression" className="text-sm font-medium">
+                            Compression
+                          </Label>
+                          <Select
+                            value={settings.imageCompression}
+                            onValueChange={(value: PackageSettings['imageCompression']) => 
+                              updateSettings({ ...settings, imageCompression: value })
+                            }
+                          >
+                            <SelectTrigger className="mt-1">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="none">Do not Compress</SelectItem>
+                              <SelectItem value="low">Low</SelectItem>
+                              <SelectItem value="medium">Medium</SelectItem>
+                              <SelectItem value="high">High</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
                     </div>
 
-                    <div className="space-y-2">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="convertImages"
-                          checked={settings.convertImages}
-                          onCheckedChange={(checked) => 
-                            updateSettings({ ...settings, convertImages: !!checked })
-                          }
-                        />
-                        <Label htmlFor="convertImages" className="text-sm">
-                          Convert images to PNG
+                    {/* Videos Section */}
+                    <div className="border border-slate-200 rounded-lg p-3 bg-white">
+                      <h4 className="font-medium text-slate-900 mb-3">Videos</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="convertVideos"
+                            checked={settings.convertVideos}
+                            onCheckedChange={(checked) => 
+                              updateSettings({ ...settings, convertVideos: !!checked })
+                            }
+                          />
+                          <Label htmlFor="convertVideos" className="text-sm">
+                            Convert to MP4
+                          </Label>
+                        </div>
+                        <div>
+                          <Label htmlFor="videoCompression" className="text-sm font-medium">
+                            Compression
+                          </Label>
+                          <Select
+                            value={settings.videoCompression}
+                            onValueChange={(value: PackageSettings['videoCompression']) => 
+                              updateSettings({ ...settings, videoCompression: value })
+                            }
+                          >
+                            <SelectTrigger className="mt-1">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="none">Do not Compress</SelectItem>
+                              <SelectItem value="low">Low</SelectItem>
+                              <SelectItem value="medium">Medium</SelectItem>
+                              <SelectItem value="high">High</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Package Compression */}
+                    <div className="border border-slate-200 rounded-lg p-3 bg-white">
+                      <h4 className="font-medium text-slate-900 mb-3">Package Compression</h4>
+                      <div>
+                        <Label htmlFor="compressionLevel" className="text-sm font-medium">
+                          ZIP Compression Level
                         </Label>
+                        <Select
+                          value={settings.compressionLevel}
+                          onValueChange={(value: PackageSettings['compressionLevel']) => 
+                            updateSettings({ ...settings, compressionLevel: value })
+                          }
+                        >
+                          <SelectTrigger className="mt-1">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="low">Low</SelectItem>
+                            <SelectItem value="normal">Normal</SelectItem>
+                            <SelectItem value="high">High</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                     </div>
                   </div>

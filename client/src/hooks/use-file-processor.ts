@@ -7,7 +7,10 @@ const defaultSettings: PackageSettings = {
   baseDirectory: 'Collection',
   mediaFolder: 'media',
   preserveExtensions: true,
-  convertImages: true,
+  convertImages: false,
+  convertVideos: false,
+  imageCompression: 'none',
+  videoCompression: 'none',
   compressionLevel: 'normal',
   tableFileSettings: {
     useTableName: false,
