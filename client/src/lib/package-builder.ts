@@ -171,7 +171,8 @@ export class PackageBuilder {
     const content = await this.zip.generateAsync(
       {
         type: 'blob',
-        ...this.getCompressionOptions()
+        ...this.getCompressionOptions(),
+        platform: 'UNIX'
       },
       (metadata) => {
         if (onProgress) {
