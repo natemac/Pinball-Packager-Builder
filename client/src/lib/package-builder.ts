@@ -109,8 +109,42 @@ export class PackageBuilder {
   }
 
   async addTableFile(tableFile: TableFile): Promise<void> {
-    const gameTypeName = tableFile.type === 'vpx' ? 'Visual Pinball X' : 'Future Pinball';
-    const filePath = `${this.settings.baseDirectory}/${gameTypeName}/${tableFile.file.name}`;
+    const tableFileSettings = this.settings.tableFileSettings;
+    let filePath: string;
+    
+    if (tableFileSettings?.location) {
+      // Use the custom location if specified
+      let location = tableFileSettings.location;
+      
+      // Replace game type placeholder if needed
+      const gameTypeName = tableFile.type === 'vpx' ? 'Visual Pinball X' : 'Future Pinball';
+      location = location.replace(/Visual Pinball X|Future Pinball/g, gameTypeName);
+      
+      // Convert backslashes to forward slashes for consistent path handling
+      location = location.replace(/\\/g, '/');
+      
+      // Get the filename with prefix/suffix
+      let fileName = tableFile.file.name;
+      if (tableFileSettings.useTableName) {
+        const extension = tableFile.file.name.split('.').pop() || '';
+        const sanitizedTableName = sanitizeFileName(tableFile.name);
+        const prefix = tableFileSettings.prefix || '';
+        const suffix = tableFileSettings.suffix || '';
+        fileName = `${prefix}${sanitizedTableName}${suffix}.${extension}`;
+      } else {
+        const baseName = removeFileExtension(tableFile.file.name);
+        const extension = tableFile.file.name.split('.').pop() || '';
+        const prefix = tableFileSettings.prefix || '';
+        const suffix = tableFileSettings.suffix || '';
+        fileName = `${prefix}${baseName}${suffix}.${extension}`;
+      }
+      
+      filePath = `${location}/${fileName}`;
+    } else {
+      // Fallback to original logic
+      const gameTypeName = tableFile.type === 'vpx' ? 'Visual Pinball X' : 'Future Pinball';
+      filePath = `${this.settings.baseDirectory}/${gameTypeName}/${tableFile.file.name}`;
+    }
     
     this.zip.file(filePath, tableFile.file, this.getCompressionOptions());
   }
