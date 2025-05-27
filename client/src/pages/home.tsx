@@ -234,57 +234,65 @@ export default function Home() {
                 </div>
 
                 <div className="space-y-4">
-                  <FileUploadCard
-                    title="Cover Image"
-                    description="Menu Select Image (.png, .jpg)"
-                    icon="image"
-                    onFileUpload={(file) => handleAdditionalFileUpload(file, 'cover')}
-                    acceptedTypes={['.png', '.jpg', '.jpeg']}
-                    useTableName={settings.fileSettings.cover.useTableName}
-                    onUseTableNameChange={(use) => handleUseTableNameChange('cover', use)}
-                    category="cover"
-                    hasFile={hasFileForCategory('cover')}
-                    uploadedFile={getFileForCategory('cover')}
-                  />
+                  <div className="border border-slate-200 rounded-lg p-3 bg-white">
+                    <FileUploadCard
+                      title="Cover Image"
+                      description="Menu Select Image (.png, .jpg)"
+                      icon="image"
+                      onFileUpload={(file) => handleAdditionalFileUpload(file, 'cover')}
+                      acceptedTypes={['.png', '.jpg', '.jpeg']}
+                      useTableName={settings.fileSettings.cover.useTableName}
+                      onUseTableNameChange={(use) => handleUseTableNameChange('cover', use)}
+                      category="cover"
+                      hasFile={hasFileForCategory('cover')}
+                      uploadedFile={getFileForCategory('cover')}
+                    />
+                  </div>
 
-                  <FileUploadCard
-                    title="Topper Image"
-                    description="Third Screen DMD Topper Image"
-                    icon="image"
-                    onFileUpload={(file) => handleAdditionalFileUpload(file, 'topper')}
-                    acceptedTypes={['.png', '.jpg', '.jpeg']}
-                    useTableName={settings.fileSettings.topper.useTableName}
-                    onUseTableNameChange={(use) => handleUseTableNameChange('topper', use)}
-                    category="topper"
-                    hasFile={hasFileForCategory('topper')}
-                    uploadedFile={getFileForCategory('topper')}
-                  />
+                  <div className="border border-slate-200 rounded-lg p-3 bg-white">
+                    <FileUploadCard
+                      title="Topper Image"
+                      description="Third Screen DMD Topper Image"
+                      icon="image"
+                      onFileUpload={(file) => handleAdditionalFileUpload(file, 'topper')}
+                      acceptedTypes={['.png', '.jpg', '.jpeg']}
+                      useTableName={settings.fileSettings.topper.useTableName}
+                      onUseTableNameChange={(use) => handleUseTableNameChange('topper', use)}
+                      category="topper"
+                      hasFile={hasFileForCategory('topper')}
+                      uploadedFile={getFileForCategory('topper')}
+                    />
+                  </div>
 
-                  <FileUploadCard
-                    title="Table Video"
-                    description="Gameplay video/image (.mp4, .webm, .mov, .avi, .wmv, .flv, .mkv, .jpg, .png)"
-                    icon="video"
-                    onFileUpload={(file) => handleAdditionalFileUpload(file, 'tableVideo')}
-                    acceptedTypes={['.mp4', '.webm', '.mov', '.avi', '.wmv', '.flv', '.mkv', '.jpg', '.png']}
-                    useTableName={settings.fileSettings.tableVideo.useTableName}
-                    onUseTableNameChange={(use) => handleUseTableNameChange('tableVideo', use)}
-                    category="tableVideo"
-                    hasFile={hasFileForCategory('tableVideo')}
-                    uploadedFile={getFileForCategory('tableVideo')}
-                  />
+                  <div className="border border-slate-200 rounded-lg p-3 bg-white">
+                    <FileUploadCard
+                      title="Table Video"
+                      description="Gameplay video/image (.mp4, .webm, .mov, .avi, .wmv, .flv, .mkv, .jpg, .png)"
+                      icon="video"
+                      onFileUpload={(file) => handleAdditionalFileUpload(file, 'tableVideo')}
+                      acceptedTypes={['.mp4', '.webm', '.mov', '.avi', '.wmv', '.flv', '.mkv', '.jpg', '.png']}
+                      useTableName={settings.fileSettings.tableVideo.useTableName}
+                      onUseTableNameChange={(use) => handleUseTableNameChange('tableVideo', use)}
+                      category="tableVideo"
+                      hasFile={hasFileForCategory('tableVideo')}
+                      uploadedFile={getFileForCategory('tableVideo')}
+                    />
+                  </div>
 
-                  <FileUploadCard
-                    title="Marquee Video"
-                    description="Backglass Menu Video (.mp4, .webm, .mov, .avi, .wmv, .flv, .mkv)"
-                    icon="video"
-                    onFileUpload={(file) => handleAdditionalFileUpload(file, 'marqueeVideo')}
-                    acceptedTypes={['.mp4', '.webm', '.mov', '.avi', '.wmv', '.flv', '.mkv']}
-                    useTableName={settings.fileSettings.marqueeVideo.useTableName}
-                    onUseTableNameChange={(use) => handleUseTableNameChange('marqueeVideo', use)}
-                    category="marqueeVideo"
-                    hasFile={hasFileForCategory('marqueeVideo')}
-                    uploadedFile={getFileForCategory('marqueeVideo')}
-                  />
+                  <div className="border border-slate-200 rounded-lg p-3 bg-white">
+                    <FileUploadCard
+                      title="Marquee Video"
+                      description="Backglass Menu Video (.mp4, .webm, .mov, .avi, .wmv, .flv, .mkv)"
+                      icon="video"
+                      onFileUpload={(file) => handleAdditionalFileUpload(file, 'marqueeVideo')}
+                      acceptedTypes={['.mp4', '.webm', '.mov', '.avi', '.wmv', '.flv', '.mkv']}
+                      useTableName={settings.fileSettings.marqueeVideo.useTableName}
+                      onUseTableNameChange={(use) => handleUseTableNameChange('marqueeVideo', use)}
+                      category="marqueeVideo"
+                      hasFile={hasFileForCategory('marqueeVideo')}
+                      uploadedFile={getFileForCategory('marqueeVideo')}
+                    />
+                  </div>
                 </div>
 
                 {/* VPX-Specific Files */}
