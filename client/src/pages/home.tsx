@@ -275,7 +275,7 @@ export default function Home() {
                       <span className="text-yellow-500 mr-2">⭐</span>
                       Visual Pinball X Specific Files
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="space-y-4">
                       <div className="border border-indigo-200 rounded-lg p-4 bg-white">
                         <FileUploadCard
                           title="DirectB2S"
