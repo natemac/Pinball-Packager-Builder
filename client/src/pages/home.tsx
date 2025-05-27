@@ -398,19 +398,6 @@ export default function Home() {
                           Convert images to PNG
                         </Label>
                       </div>
-
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="preserveExtensions"
-                          checked={settings.preserveExtensions}
-                          onCheckedChange={(checked) => 
-                            updateSettings({ ...settings, preserveExtensions: !!checked })
-                          }
-                        />
-                        <Label htmlFor="preserveExtensions" className="text-sm">
-                          Preserve file extensions
-                        </Label>
-                      </div>
                     </div>
                   </div>
                 </div>
