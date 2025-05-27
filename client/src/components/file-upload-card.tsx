@@ -158,9 +158,9 @@ export default function FileUploadCard({
     <div
       {...getRootProps()}
       className={`
-        border-2 border-dashed border-slate-300 rounded-lg p-6 hover:border-blue-400 transition-colors cursor-pointer
-        ${isDragActive ? 'border-blue-500 bg-blue-50' : ''}
-        ${hasFile ? 'border-solid border-green-300 bg-green-50' : ''}
+        border border-slate-200 rounded-lg p-6 bg-white hover:border-blue-300 transition-colors cursor-pointer
+        ${isDragActive ? 'border-blue-400 bg-blue-50' : ''}
+        ${hasFile ? 'border-green-300 bg-green-50' : ''}
       `}
     >
       <input {...getInputProps()} />
@@ -204,7 +204,7 @@ export default function FileUploadCard({
             </>
           ) : (
             <>
-              <div className="w-16 h-16 bg-slate-100 rounded-lg border-2 border-dashed border-slate-300 flex items-center justify-center hover:border-blue-400 transition-colors">
+              <div className="w-16 h-16 bg-slate-100 rounded-lg border border-slate-200 flex items-center justify-center hover:border-blue-300 transition-colors">
                 <Plus className="h-6 w-6 text-slate-400" />
               </div>
               <Button
