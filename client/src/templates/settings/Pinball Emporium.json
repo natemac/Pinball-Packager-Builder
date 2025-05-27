@@ -5,6 +5,12 @@
   "preserveExtensions": true,
   "convertImages": true,
   "compressionLevel": "normal",
+  "tableFileSettings": {
+    "useTableName": true,
+    "prefix": "",
+    "suffix": "",
+    "location": "emulators\\Visual Pinball X\\Tables"
+  },
   "fileSettings": {
     "cover": {
       "useTableName": true,

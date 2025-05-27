@@ -5,6 +5,12 @@
   "preserveExtensions": true,
   "convertImages": false,
   "compressionLevel": "fast",
+  "tableFileSettings": {
+    "useTableName": true,
+    "prefix": "",
+    "suffix": "",
+    "location": "PinUP Popper\\VPinball\\VisualPinball\\Tables"
+  },
   "fileSettings": {
     "cover": {
       "useTableName": true,
