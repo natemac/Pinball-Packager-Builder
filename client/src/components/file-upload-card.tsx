@@ -204,9 +204,7 @@ export default function FileUploadCard({
               onClick={open}
               className="p-3 pt-[40px] pb-[40px] pl-[40px] pr-[40px]"
             >
-              <div className="w-16 h-16 bg-slate-100 rounded-lg border border-slate-200 flex items-center justify-center">
-                <Plus className="h-6 w-6 text-slate-400" />
-              </div>
+              <Plus className="h-6 w-6 text-slate-400" />
             </Button>
           )}
         </div>
