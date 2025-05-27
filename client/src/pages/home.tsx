@@ -25,7 +25,7 @@ export default function Home() {
   const [showSettings, setShowSettings] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationProgress, setGenerationProgress] = useState(0);
-  
+
   const {
     tableFile,
     additionalFiles,
@@ -41,13 +41,13 @@ export default function Home() {
   const handleTableFileUpload = (file: File) => {
     const fileName = file.name.toLowerCase();
     let fileType: 'vpx' | 'fp' | null = null;
-    
+
     if (fileName.endsWith('.vpx')) {
       fileType = 'vpx';
     } else if (fileName.endsWith('.fp')) {
       fileType = 'fp';
     }
-    
+
     if (!fileType) {
       toast({
         title: "Invalid File Type",
@@ -56,15 +56,15 @@ export default function Home() {
       });
       return;
     }
-    
+
     const tableFileData: TableFile = {
       file,
       name: file.name.replace(/\.(vpx|fp)$/i, ''),
       type: fileType
     };
-    
+
     setTableFile(tableFileData);
-    
+
     toast({
       title: "File Detected",
       description: `${fileType.toUpperCase()} file detected successfully!`,
@@ -147,15 +147,15 @@ export default function Home() {
 
   function calculateEstimatedSize(): string {
     let totalBytes = 0;
-    
+
     if (tableFile) {
       totalBytes += tableFile.file.size;
     }
-    
+
     additionalFiles.forEach(file => {
       totalBytes += file.size;
     });
-    
+
     const mb = totalBytes / (1024 * 1024);
     return mb.toFixed(1) + ' MB';
   }
@@ -190,10 +190,10 @@ export default function Home() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
+
           {/* Main Workspace */}
           <div className="lg:col-span-2 space-y-6">
-            
+
             {/* Step 1: Table File Upload */}
             <Card>
               <CardContent className="p-6">
@@ -203,7 +203,7 @@ export default function Home() {
                   </div>
                   <h2 className="text-lg font-semibold text-slate-900">Upload Table File</h2>
                 </div>
-                
+
                 <DragDropZone
                   onFileUpload={handleTableFileUpload}
                   acceptedTypes={['.vpx', '.fp']}
@@ -223,7 +223,7 @@ export default function Home() {
                   <span className="ml-auto text-sm text-slate-500">Optional</span>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-4">
                   <FileUploadCard
                     title="Cover Image"
                     description="Table cover artwork (.png, .jpg)"
@@ -234,7 +234,7 @@ export default function Home() {
                     onUseTableNameChange={(use) => handleUseTableNameChange('cover', use)}
                     category="cover"
                   />
-                  
+
                   <FileUploadCard
                     title="Topper Image"
                     description="Topper display image (.png, .jpg)"
@@ -245,7 +245,7 @@ export default function Home() {
                     onUseTableNameChange={(use) => handleUseTableNameChange('topper', use)}
                     category="topper"
                   />
-                  
+
                   <FileUploadCard
                     title="Table Video"
                     description="Gameplay video (.mp4, .avi)"
@@ -256,7 +256,7 @@ export default function Home() {
                     onUseTableNameChange={(use) => handleUseTableNameChange('tableVideo', use)}
                     category="tableVideo"
                   />
-                  
+
                   <FileUploadCard
                     title="Marquee Video"
                     description="Marquee display video (.mp4, .avi)"
@@ -290,7 +290,7 @@ export default function Home() {
                           category="directb2s"
                         />
                       </div>
-                      
+
                       <div className="border border-indigo-200 rounded-lg p-4 bg-white">
                         <FileUploadCard
                           title="Music"
@@ -304,7 +304,7 @@ export default function Home() {
                           category="music"
                         />
                       </div>
-                      
+
                       <div className="border border-indigo-200 rounded-lg p-4 bg-white">
                         <FileUploadCard
                           title="Scripts"
@@ -349,7 +349,7 @@ export default function Home() {
                       <p className="font-medium text-slate-900">{estimatedSize}</p>
                     </div>
                   </div>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="compressionLevel" className="text-sm font-medium">
@@ -372,7 +372,7 @@ export default function Home() {
                         </SelectContent>
                       </Select>
                     </div>
-                    
+
                     <div className="space-y-2">
                       <div className="flex items-center space-x-2">
                         <Checkbox
@@ -386,7 +386,7 @@ export default function Home() {
                           Convert images to PNG
                         </Label>
                       </div>
-                      
+
                       <div className="flex items-center space-x-2">
                         <Checkbox
                           id="preserveExtensions"
@@ -439,12 +439,12 @@ export default function Home() {
               additionalFiles={additionalFiles}
               settings={settings}
             />
-            
+
             <AddedFilesList
               files={additionalFiles}
               onRemoveFile={removeAdditionalFile}
             />
-            
+
             {/* Quick Actions */}
             <Card>
               <CardContent className="p-6">
@@ -452,7 +452,7 @@ export default function Home() {
                   <span className="text-lg mr-2">⚡</span>
                   Quick Actions
                 </h3>
-                
+
                 <div className="space-y-3">
                   <Button
                     variant="ghost"
@@ -462,7 +462,7 @@ export default function Home() {
                     <span className="mr-3">🔄</span>
                     Clear All Files
                   </Button>
-                  
+
                   <Button
                     variant="ghost"
                     className="w-full justify-start"
