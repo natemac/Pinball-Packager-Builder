@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Settings, HelpCircle, Box, Download } from "lucide-react";
+import { Settings, HelpCircle, Box, Download, Plus } from "lucide-react";
 import DragDropZone from "@/components/drag-drop-zone";
 import FileUploadCard from "@/components/file-upload-card";
 import PackageStructure from "@/components/package-structure";
@@ -26,7 +26,7 @@ export default function Home() {
   const [showSettings, setShowSettings] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationProgress, setGenerationProgress] = useState(0);
-  const [customFileLocation, setCustomFileLocation] = useState('');
+  const [customFiles, setCustomFiles] = useState<Array<{id: string, location: string, file?: File}>>([]);
 
   const {
     tableFile,
@@ -102,6 +102,26 @@ export default function Home() {
   // Helper function to get uploaded file by category
   const getFileForCategory = (category: AdditionalFile['category']) => {
     return additionalFiles.find(file => file.category === category)?.file;
+  };
+
+  // Custom files management
+  const addCustomFileDialog = () => {
+    const newId = `custom-${Date.now()}`;
+    setCustomFiles(prev => [...prev, { id: newId, location: '' }]);
+  };
+
+  const updateCustomFileLocation = (id: string, location: string) => {
+    setCustomFiles(prev => prev.map(cf => cf.id === id ? { ...cf, location } : cf));
+  };
+
+  const handleCustomFileUpload = (id: string, file: File) => {
+    setCustomFiles(prev => prev.map(cf => cf.id === id ? { ...cf, file } : cf));
+    // Also add to additional files for processing
+    handleAdditionalFileUpload(file, 'scripts');
+  };
+
+  const removeCustomFile = (id: string) => {
+    setCustomFiles(prev => prev.filter(cf => cf.id !== id));
   };
 
   const handleGeneratePackage = async () => {
@@ -360,21 +380,44 @@ export default function Home() {
                 </div>
 
                 <div className="space-y-4">
-                  <FileUploadCard
-                    title="Custom File"
-                    description="Additional custom files (.any format)"
-                    icon="code"
-                    onFileUpload={(file) => handleAdditionalFileUpload(file, 'scripts')}
-                    acceptedTypes={['*']}
-                    useTableName={settings.fileSettings.scripts.useTableName}
-                    onUseTableNameChange={(use) => handleUseTableNameChange('scripts', use)}
-                    category="scripts"
-                    hasFile={hasFileForCategory('scripts')}
-                    uploadedFile={getFileForCategory('scripts')}
-                    showCustomLocation={true}
-                    customLocation={customFileLocation}
-                    onCustomLocationChange={setCustomFileLocation}
-                  />
+                  {/* Add Custom File Button */}
+                  <Button
+                    onClick={addCustomFileDialog}
+                    variant="outline"
+                    className="w-full border-dashed border-2 border-slate-300 hover:border-blue-400 py-8"
+                  >
+                    <Plus className="h-6 w-6 mr-2 text-slate-400" />
+                    Add Custom File
+                  </Button>
+
+                  {/* Custom File Upload Cards */}
+                  {customFiles.map((customFile) => (
+                    <div key={customFile.id} className="relative">
+                      <FileUploadCard
+                        title="Custom File"
+                        description="Additional custom files (.any format)"
+                        icon="code"
+                        onFileUpload={(file) => handleCustomFileUpload(customFile.id, file)}
+                        acceptedTypes={['*']}
+                        useTableName={false}
+                        category={`custom-${customFile.id}`}
+                        hasFile={!!customFile.file}
+                        uploadedFile={customFile.file}
+                        showCustomLocation={true}
+                        customLocation={customFile.location}
+                        onCustomLocationChange={(location) => updateCustomFileLocation(customFile.id, location)}
+                      />
+                      {/* Remove button */}
+                      <Button
+                        onClick={() => removeCustomFile(customFile.id)}
+                        variant="destructive"
+                        size="sm"
+                        className="absolute top-2 right-2 h-8 w-8 p-0"
+                      >
+                        ×
+                      </Button>
+                    </div>
+                  ))}
                 </div>
               </CardContent>
             </Card>
