@@ -78,7 +78,7 @@ export default function FileUploadCard({
 
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
     onDrop,
-    accept: acceptedTypes.reduce((acc, type) => {
+    accept: acceptedTypes.includes('*') ? undefined : acceptedTypes.reduce((acc, type) => {
       acc['application/octet-stream'] = acc['application/octet-stream'] || [];
       acc['application/octet-stream'].push(type);
       return acc;
