@@ -286,67 +286,63 @@ export default function Home() {
                     uploadedFile={getFileForCategory('marqueeVideo')}
                   />
                 </div>
-
-                {/* VPX-Specific Files */}
-                {tableFile?.type === 'vpx' && (
-                  <div className="mt-6 p-4 bg-indigo-50 border border-indigo-200 rounded-lg">
-                    <h3 className="font-medium text-indigo-900 mb-3 flex items-center">
-                      <span className="text-yellow-500 mr-2">⭐</span>
-                      Visual Pinball X Specific Files
-                    </h3>
-                    <div className="space-y-4">
-                      <div className="border border-indigo-200 rounded-lg p-4 bg-white">
-                        <FileUploadCard
-                          title="DirectB2S"
-                          description="Backglass file (.directb2s)"
-                          icon="code"
-                          onFileUpload={(file) => handleAdditionalFileUpload(file, 'directb2s')}
-                          acceptedTypes={['.directb2s']}
-                          compact
-                          useTableName={settings.fileSettings.directb2s.useTableName}
-                          onUseTableNameChange={(use) => handleUseTableNameChange('directb2s', use)}
-                          category="directb2s"
-                          hasFile={hasFileForCategory('directb2s')}
-                          uploadedFile={getFileForCategory('directb2s')}
-                        />
-                      </div>
-
-                      <div className="border border-indigo-200 rounded-lg p-4 bg-white">
-                        <FileUploadCard
-                          title="Music"
-                          description="Audio files (.mp3, .wav)"
-                          icon="audio"
-                          onFileUpload={(file) => handleAdditionalFileUpload(file, 'music')}
-                          acceptedTypes={['.mp3', '.wav']}
-                          compact
-                          useTableName={settings.fileSettings.music.useTableName}
-                          onUseTableNameChange={(use) => handleUseTableNameChange('music', use)}
-                          category="music"
-                          hasFile={hasFileForCategory('music')}
-                          uploadedFile={getFileForCategory('music')}
-                        />
-                      </div>
-
-                      <div className="border border-indigo-200 rounded-lg p-4 bg-white">
-                        <FileUploadCard
-                          title="Scripts"
-                          description="Script files (.vbs, .txt)"
-                          icon="code"
-                          onFileUpload={(file) => handleAdditionalFileUpload(file, 'scripts')}
-                          acceptedTypes={['.vbs', '.txt']}
-                          compact
-                          useTableName={settings.fileSettings.scripts.useTableName}
-                          onUseTableNameChange={(use) => handleUseTableNameChange('scripts', use)}
-                          category="scripts"
-                          hasFile={hasFileForCategory('scripts')}
-                          uploadedFile={getFileForCategory('scripts')}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                )}
               </CardContent>
             </Card>
+
+            {/* VPX-Specific Files */}
+            {tableFile?.type === 'vpx' && (
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center mb-4">
+                    <div className="w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center text-sm font-bold mr-3">
+                      ⭐
+                    </div>
+                    <h2 className="text-lg font-semibold text-slate-900">Visual Pinball X Specific Files</h2>
+                  </div>
+
+                  <div className="space-y-4">
+                    <FileUploadCard
+                      title="DirectB2S"
+                      description="Backglass file (.directb2s)"
+                      icon="code"
+                      onFileUpload={(file) => handleAdditionalFileUpload(file, 'directb2s')}
+                      acceptedTypes={['.directb2s']}
+                      useTableName={settings.fileSettings.directb2s.useTableName}
+                      onUseTableNameChange={(use) => handleUseTableNameChange('directb2s', use)}
+                      category="directb2s"
+                      hasFile={hasFileForCategory('directb2s')}
+                      uploadedFile={getFileForCategory('directb2s')}
+                    />
+
+                    <FileUploadCard
+                      title="Music"
+                      description="Audio files (.mp3, .wav)"
+                      icon="audio"
+                      onFileUpload={(file) => handleAdditionalFileUpload(file, 'music')}
+                      acceptedTypes={['.mp3', '.wav']}
+                      useTableName={settings.fileSettings.music.useTableName}
+                      onUseTableNameChange={(use) => handleUseTableNameChange('music', use)}
+                      category="music"
+                      hasFile={hasFileForCategory('music')}
+                      uploadedFile={getFileForCategory('music')}
+                    />
+
+                    <FileUploadCard
+                      title="Scripts"
+                      description="Script files (.vbs, .txt)"
+                      icon="code"
+                      onFileUpload={(file) => handleAdditionalFileUpload(file, 'scripts')}
+                      acceptedTypes={['.vbs', '.txt']}
+                      useTableName={settings.fileSettings.scripts.useTableName}
+                      onUseTableNameChange={(use) => handleUseTableNameChange('scripts', use)}
+                      category="scripts"
+                      hasFile={hasFileForCategory('scripts')}
+                      uploadedFile={getFileForCategory('scripts')}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Step 3: Package Generation */}
             <Card>
