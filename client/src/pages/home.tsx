@@ -494,6 +494,7 @@ export default function Home() {
           {/* Sidebar */}
           <div className="space-y-6">
             <PackageStructure
+              key={tableFile?.name || 'no-table'}
               tableFile={tableFile}
               additionalFiles={additionalFiles}
               settings={settings}
@@ -591,6 +592,7 @@ export default function Home() {
             </Card>
 
             <AddedFilesList
+              key={`${tableFile?.name || 'no-table'}-${additionalFiles.length}`}
               tableFile={tableFile}
               files={additionalFiles}
               settings={settings}
