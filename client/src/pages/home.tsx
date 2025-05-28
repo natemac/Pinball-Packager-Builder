@@ -348,6 +348,33 @@ export default function Home() {
               </CardContent>
             </Card>
 
+            {/* Step 2.5: Custom Files */}
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  <div className={`w-8 h-8 ${tableFile ? 'bg-blue-600' : 'bg-slate-300'} text-white rounded-full flex items-center justify-center text-sm font-bold mr-3`}>
+                    2.5
+                  </div>
+                  <h2 className="text-lg font-semibold text-slate-900">Custom Files</h2>
+                </div>
+
+                <div className="space-y-4">
+                  <FileUploadCard
+                    title="Custom File"
+                    description="Additional custom files (.any format)"
+                    icon="code"
+                    onFileUpload={(file) => handleAdditionalFileUpload(file, 'scripts')}
+                    acceptedTypes={['*']}
+                    useTableName={settings.fileSettings.scripts.useTableName}
+                    onUseTableNameChange={(use) => handleUseTableNameChange('scripts', use)}
+                    category="scripts"
+                    hasFile={hasFileForCategory('scripts')}
+                    uploadedFile={getFileForCategory('scripts')}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Step 3: Package Generation */}
             <Card>
               <CardContent className="p-6">
