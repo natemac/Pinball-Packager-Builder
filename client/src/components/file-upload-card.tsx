@@ -193,9 +193,9 @@ export default function FileUploadCard({
               </Label>
               <Input
                 id={`${category}-customLocation`}
-                value={customLocation || ''}
+                value={customLocation || 'Collection/Custom Files'}
                 onChange={(e) => onCustomLocationChange(e.target.value)}
-                placeholder="Enter custom file location..."
+                placeholder="Collection/Custom Files"
                 className="text-xs"
               />
             </div>

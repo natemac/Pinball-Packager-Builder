@@ -109,6 +109,7 @@ export function useFileProcessor() {
     additionalFiles,
     settings,
     setTableFile,
+    setAdditionalFiles,
     addAdditionalFile,
     removeAdditionalFile,
     updateSettings,

@@ -19,6 +19,7 @@ import AddedFilesList from "@/components/added-files-list";
 import SettingsModal from "@/components/settings-modal";
 import { useFileProcessor } from "@/hooks/use-file-processor";
 import { getTemplate } from "@/lib/settings-templates";
+import { generateUniqueId } from "@/lib/file-utils";
 import type { TableFile, AdditionalFile, PackageSettings } from "@shared/schema";
 
 export default function Home() {
@@ -26,7 +27,7 @@ export default function Home() {
   const [showSettings, setShowSettings] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationProgress, setGenerationProgress] = useState(0);
-  const [customFiles, setCustomFiles] = useState<Array<{id: string, location: string, file?: File}>>([]);
+  const [customFiles, setCustomFiles] = useState<Array<{id: string, location: string, file?: File, useTableName?: boolean}>>([]);
 
   const {
     tableFile,
@@ -37,7 +38,8 @@ export default function Home() {
     removeAdditionalFile,
     updateSettings,
     generatePackage,
-    clearAll
+    clearAll,
+    setAdditionalFiles
   } = useFileProcessor();
 
   const handleTableFileUpload = (file: File) => {
@@ -107,15 +109,24 @@ export default function Home() {
   // Custom files management
   const addCustomFileDialog = () => {
     const newId = `custom-${Date.now()}`;
-    setCustomFiles(prev => [...prev, { id: newId, location: 'Collection/Custom Files' }]);
+    setCustomFiles(prev => [...prev, { id: newId, location: 'Collection/Custom Files', useTableName: false }]);
   };
 
   const updateCustomFileLocation = (id: string, location: string) => {
     setCustomFiles(prev => prev.map(cf => cf.id === id ? { ...cf, location } : cf));
+    // Update the corresponding additional file's custom location
+    setAdditionalFiles(prev => prev.map(f => 
+      f.customFileId === id ? { ...f, customLocation: location } : f
+    ));
+  };
+
+  const updateCustomFileUseTableName = (id: string, useTableName: boolean) => {
+    setCustomFiles(prev => prev.map(cf => cf.id === id ? { ...cf, useTableName } : cf));
   };
 
   const handleCustomFileUpload = (id: string, file: File) => {
     setCustomFiles(prev => prev.map(cf => cf.id === id ? { ...cf, file } : cf));
+    
     // Add to additional files for processing with custom category
     const customFile = customFiles.find(cf => cf.id === id);
     const newAdditionalFile: AdditionalFile = {
@@ -123,9 +134,18 @@ export default function Home() {
       file,
       category: 'scripts', // We'll use scripts as base category but override location
       originalName: file.name,
-      customLocation: customFile?.location || `Collection/Custom Files`
+      customLocation: customFile?.location || 'Collection/Custom Files',
+      customFileId: id,
+      size: file.size
     };
-    setAdditionalFiles(prev => [...prev.filter(f => f.customFileId !== id), { ...newAdditionalFile, customFileId: id }]);
+    
+    // Remove any existing file for this custom file ID and add the new one
+    setAdditionalFiles(prev => [...prev.filter(f => f.customFileId !== id), newAdditionalFile]);
+    
+    toast({
+      title: "Custom File Added",
+      description: `${file.name} has been added to the package.`,
+    });
   };
 
   const removeCustomFile = (id: string) => {
@@ -407,7 +427,8 @@ export default function Home() {
                         icon="code"
                         onFileUpload={(file) => handleCustomFileUpload(customFile.id, file)}
                         acceptedTypes={['*']}
-                        useTableName={false}
+                        useTableName={customFile.useTableName || false}
+                        onUseTableNameChange={(use) => updateCustomFileUseTableName(customFile.id, use)}
                         category={`custom-${customFile.id}`}
                         hasFile={!!customFile.file}
                         uploadedFile={customFile.file}
