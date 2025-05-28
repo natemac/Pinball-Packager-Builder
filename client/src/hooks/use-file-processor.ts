@@ -55,7 +55,7 @@ const defaultSettings: PackageSettings = {
       location: 'Collection\\Visual Pinball X\\media\\music'
     },
     scripts: {
-      useTableName: true,
+      useTableName: false,
       prefix: '',
       suffix: '',
       location: 'Collection\\Visual Pinball X\\scripts'
