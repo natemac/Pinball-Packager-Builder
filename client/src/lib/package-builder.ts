@@ -263,8 +263,10 @@ export class PackageBuilder {
     additionalFiles: AdditionalFile[],
     onProgress?: (progress: number) => void
   ): Promise<void> {
-    // Add table file
-    await this.addTableFile(tableFile);
+    // Add table file only if setting allows it
+    if (this.settings.includeTableFile) {
+      await this.addTableFile(tableFile);
+    }
 
     // Add additional files
     for (const file of additionalFiles) {

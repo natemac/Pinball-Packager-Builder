@@ -37,6 +37,7 @@ const extractSettingsFromTemplate = (template: any): PackageSettings => {
     const { tableFileSettings, ...otherFileSettings } = templateData.fileSettings;
     processedSettings = {
       ...templateData,
+      includeTableFile: templateData.includeTableFile ?? true,
       tableFileSettings,
       fileSettings: otherFileSettings
     };
@@ -48,6 +49,7 @@ const extractSettingsFromTemplate = (template: any): PackageSettings => {
       preserveExtensions: true,
       convertImages: false,
       convertVideos: false,
+      includeTableFile: true,
       imageCompression: 'none',
       videoCompression: 'none',
       compressionLevel: 'normal',
