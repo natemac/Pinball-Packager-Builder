@@ -2,7 +2,6 @@ import { useState, useCallback } from 'react';
 import type { TableFile, AdditionalFile, PackageSettings } from '@shared/schema';
 import { PackageBuilder } from '@/lib/package-builder';
 import { generateUniqueId } from '@/lib/file-utils';
-
 import { getTemplate } from '@/lib/settings-templates';
 
 const getDefaultSettings = (): PackageSettings => {
@@ -23,53 +22,54 @@ const getDefaultSettings = (): PackageSettings => {
     compressionLevel: 'normal',
     includeTableFile: true,
     tableFileSettings: {
-    useTableName: false,
-    prefix: '',
-    suffix: '',
-    location: 'Collection\\Visual Pinball X\\Tables'
-  },
-  fileSettings: {
-    cover: {
-      useTableName: true,
+      useTableName: false,
       prefix: '',
       suffix: '',
-      location: 'Collection\\Visual Pinball X\\media\\covers'
+      location: 'Collection\\Visual Pinball X\\Tables'
     },
-    topper: {
-      useTableName: true,
-      prefix: '',
-      suffix: '',
-      location: 'Collection\\Visual Pinball X\\media\\topper'
-    },
-    tableVideo: {
-      useTableName: true,
-      prefix: '',
-      suffix: '',
-      location: 'Collection\\Visual Pinball X\\media\\videos'
-    },
-    marqueeVideo: {
-      useTableName: true,
-      prefix: '',
-      suffix: '',
-      location: 'Collection\\Visual Pinball X\\media\\videos'
-    },
-    directb2s: {
-      useTableName: true,
-      prefix: '',
-      suffix: '',
-      location: 'Collection\\Visual Pinball X\\directb2s'
-    },
-    music: {
-      useTableName: true,
-      prefix: '',
-      suffix: '',
-      location: 'Collection\\Visual Pinball X\\media\\music'
-    },
-    scripts: {
-      useTableName: true,
-      prefix: '',
-      suffix: '',
-      location: 'Collection\\Visual Pinball X\\scripts'
+    fileSettings: {
+      cover: {
+        useTableName: true,
+        prefix: '',
+        suffix: '',
+        location: 'Collection\\Visual Pinball X\\media\\covers'
+      },
+      topper: {
+        useTableName: true,
+        prefix: '',
+        suffix: '',
+        location: 'Collection\\Visual Pinball X\\media\\topper'
+      },
+      tableVideo: {
+        useTableName: true,
+        prefix: '',
+        suffix: '',
+        location: 'Collection\\Visual Pinball X\\media\\table videos'
+      },
+      marqueeVideo: {
+        useTableName: true,
+        prefix: '',
+        suffix: '',
+        location: 'Collection\\Visual Pinball X\\media\\marquee videos'
+      },
+      directb2s: {
+        useTableName: true,
+        prefix: '',
+        suffix: '',
+        location: 'Collection\\Visual Pinball X\\directb2s'
+      },
+      music: {
+        useTableName: true,
+        prefix: '',
+        suffix: '',
+        location: 'Collection\\Visual Pinball X\\music'
+      },
+      scripts: {
+        useTableName: true,
+        prefix: '',
+        suffix: '',
+        location: 'Collection\\Visual Pinball X\\scripts'
+      }
     }
   };
 };
@@ -118,11 +118,10 @@ export function useFileProcessor() {
     additionalFiles,
     settings,
     setTableFile,
-    setAdditionalFiles,
     addAdditionalFile,
     removeAdditionalFile,
     updateSettings,
     clearAll,
     generatePackage
   };
-};
+}
