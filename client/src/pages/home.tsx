@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Settings, HelpCircle, Box, Download, Plus } from "lucide-react";
+import { Settings, HelpCircle, Box, Download, Plus, FileText, Image, FolderPlus } from "lucide-react";
 import DragDropZone from "@/components/drag-drop-zone";
 import FileUploadCard from "@/components/file-upload-card";
 import PackageStructure from "@/components/package-structure";
@@ -230,8 +230,8 @@ export default function Home() {
             <Card>
               <CardContent className="p-6">
                 <div className="flex items-center mb-4">
-                  <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold mr-3">
-                    1
+                  <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center mr-3">
+                    <FileText className="h-4 w-4" />
                   </div>
                   <h2 className="text-lg font-semibold text-slate-900">Upload Table File</h2>
                 </div>
@@ -250,8 +250,8 @@ export default function Home() {
             <Card>
               <CardContent className="p-6">
                 <div className="flex items-center mb-4">
-                  <div className={`w-8 h-8 ${tableFile ? 'bg-blue-600' : 'bg-slate-300'} text-white rounded-full flex items-center justify-center text-sm font-bold mr-3`}>
-                    2
+                  <div className={`w-8 h-8 ${tableFile ? 'bg-blue-600' : 'bg-slate-300'} text-white rounded-full flex items-center justify-center mr-3`}>
+                    <Image className="h-4 w-4" />
                   </div>
                   <h2 className="text-lg font-semibold text-slate-900">Frontend Files</h2>
                 </div>
@@ -372,8 +372,8 @@ export default function Home() {
             <Card>
               <CardContent className="p-6">
                 <div className="flex items-center mb-4">
-                  <div className={`w-8 h-8 ${tableFile ? 'bg-blue-600' : 'bg-slate-300'} text-white rounded-full flex items-center justify-center text-sm font-bold mr-3`}>
-                    2.5
+                  <div className={`w-8 h-8 ${tableFile ? 'bg-blue-600' : 'bg-slate-300'} text-white rounded-full flex items-center justify-center mr-3`}>
+                    <FolderPlus className="h-4 w-4" />
                   </div>
                   <h2 className="text-lg font-semibold text-slate-900">Custom Files</h2>
                 </div>
