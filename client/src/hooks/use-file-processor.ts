@@ -68,13 +68,14 @@ export function useFileProcessor() {
   const [additionalFiles, setAdditionalFiles] = useState<AdditionalFile[]>([]);
   const [settings, setSettings] = useState<PackageSettings>(defaultSettings);
 
-  const addAdditionalFile = useCallback((file: File, category: AdditionalFile['category']) => {
+  const addAdditionalFile = useCallback((file: File, category: AdditionalFile['category'], customLocation?: string) => {
     const newFile: AdditionalFile = {
       id: generateUniqueId(),
       file,
       originalName: file.name,
       category,
-      size: file.size
+      size: file.size,
+      customLocation
     };
 
     setAdditionalFiles(prev => [...prev, newFile]);

@@ -58,8 +58,9 @@ export interface AdditionalFile {
   id: string;
   file: File;
   originalName: string;
-  category: 'cover' | 'topper' | 'tableVideo' | 'marqueeVideo' | 'directb2s' | 'music' | 'scripts';
+  category: 'cover' | 'topper' | 'tableVideo' | 'marqueeVideo' | 'directb2s' | 'music' | 'scripts' | 'custom';
   size: number;
+  customLocation?: string;
 }
 
 export interface FileLocationSettings {

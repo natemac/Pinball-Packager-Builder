@@ -14,6 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Settings, HelpCircle, Box, Download } from "lucide-react";
 import DragDropZone from "@/components/drag-drop-zone";
 import FileUploadCard from "@/components/file-upload-card";
+import CustomFileUploadCard from "@/components/custom-file-upload-card";
 import PackageStructure from "@/components/package-structure";
 import AddedFilesList from "@/components/added-files-list";
 import SettingsModal from "@/components/settings-modal";
@@ -77,6 +78,14 @@ export default function Home() {
     toast({
       title: "File Added",
       description: `${file.name} has been added to the package.`,
+    });
+  };
+
+  const handleCustomFileUpload = (file: File, customLocation: string) => {
+    addAdditionalFile(file, 'custom', customLocation);
+    toast({
+      title: "Custom File Added",
+      description: `${file.name} has been added to your package.`,
     });
   };
 
@@ -285,6 +294,14 @@ export default function Home() {
                     hasFile={hasFileForCategory('marqueeVideo')}
                     uploadedFile={getFileForCategory('marqueeVideo')}
                   />
+
+                  <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <h3 className="font-medium text-blue-900 mb-3 flex items-center">
+                      <span className="text-blue-500 mr-2">+</span>
+                      Additional Files
+                    </h3>
+                    <CustomFileUploadCard onFileUpload={handleCustomFileUpload} />
+                  </div>
                 </div>
               </CardContent>
             </Card>
