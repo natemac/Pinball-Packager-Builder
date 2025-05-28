@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Settings, HelpCircle, Box, Download, Plus } from "lucide-react";
+import { Settings, HelpCircle, Box, Download, Plus, Check } from "lucide-react";
 import DragDropZone from "@/components/drag-drop-zone";
 import FileUploadCard from "@/components/file-upload-card";
 import PackageStructure from "@/components/package-structure";
@@ -308,114 +308,129 @@ export default function Home() {
             {/* Custom Files Card */}
             <Card className="w-full">
               <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  <div className="w-8 h-8 bg-purple-600 text-white rounded-full flex items-center justify-center text-sm font-bold mr-3">
+                    +
+                  </div>
+                  <h2 className="text-lg font-semibold text-slate-900">Custom Files</h2>
+                </div>
+
                 <div className="space-y-4">
-                  <h2 className="text-lg font-semibold text-slate-700 mb-4">Custom Files</h2>
-                  
-                  {/* Show custom files if any */}
+                  {/* Show existing custom files */}
                   {additionalFiles.filter(file => file.category === 'custom').map((file) => (
-                    <div key={file.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                      <div>
-                        <p className="font-medium text-slate-700">{file.originalName}</p>
-                        <p className="text-sm text-slate-500">{file.customLocation}</p>
+                    <div key={file.id} className="border border-green-300 bg-green-50 rounded-lg p-6">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="font-medium text-slate-700">{file.originalName}</h3>
+                            <Check className="h-4 w-4 text-green-500" />
+                          </div>
+                          <p className="text-sm text-slate-500 mb-3">Location: {file.customLocation}</p>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeAdditionalFile(file.id)}
+                          className="text-red-600 hover:text-red-700"
+                        >
+                          Remove
+                        </Button>
                       </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removeAdditionalFile(file.id)}
-                        className="text-red-600 hover:text-red-700"
-                      >
-                        Remove
-                      </Button>
                     </div>
                   ))}
-                  
-                  {/* Add Custom Files Button */}
-                  {!showCustomFileForm && (
-                    <Button
-                      variant="outline"
-                      onClick={() => setShowCustomFileForm(true)}
-                      className="w-full border-dashed border-2 border-slate-300 hover:border-slate-400 py-8"
-                    >
-                      <Plus className="h-5 w-5 mr-2 text-slate-500" />
-                      Add Custom Files
-                    </Button>
-                  )}
-                  
-                  {/* Expanded form when button is clicked */}
-                  {showCustomFileForm && (
-                    <div className="border border-slate-200 rounded-lg p-4 bg-slate-50">
-                      <div className="space-y-4">
-                        <div>
-                          <Label htmlFor="customLocation" className="text-sm font-medium">
-                            File Location
-                          </Label>
-                          <Input
-                            id="customLocation"
-                            placeholder="Collection\Visual Pinball X\custom"
-                            className="mt-1"
-                            defaultValue="Collection\Visual Pinball X\custom"
-                          />
-                          <p className="text-xs text-slate-500 mt-1">
-                            Example: Collection\Visual Pinball X\Tables or Collection\Visual Pinball X\custom\subfolder
-                          </p>
+
+                  {/* Add Custom File - matches other file upload cards */}
+                  <div className={`
+                    border border-slate-200 rounded-lg p-6 bg-white hover:border-blue-300 transition-colors cursor-pointer
+                    ${showCustomFileForm ? 'border-blue-400 bg-blue-50' : ''}
+                  `}>
+                    <div className="flex items-start justify-between">
+                      {/* Left side - Content justified left */}
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="font-medium text-slate-700">Add Custom File</h3>
                         </div>
-                        
-                        <div className="flex items-center space-x-2">
-                          <Checkbox
-                            id="useTableNameCustom"
-                            checked={useTableNameForCustom}
-                            onCheckedChange={setUseTableNameForCustom}
-                          />
-                          <Label htmlFor="useTableNameCustom" className="text-sm">
-                            Use table name as filename
-                          </Label>
-                        </div>
-                        
-                        <div className="flex space-x-2">
+                        <p className="text-sm text-slate-500 mb-3">Upload any additional file for your package</p>
+
+                        {/* File Location Input - only show when form is expanded */}
+                        {showCustomFileForm && (
+                          <div className="mb-3">
+                            <Label htmlFor="customLocation" className="text-sm font-medium">
+                              File Location
+                            </Label>
+                            <Input
+                              id="customLocation"
+                              placeholder="Collection\Visual Pinball X\custom"
+                              className="mt-1"
+                              defaultValue="Collection\Visual Pinball X\custom"
+                            />
+                            <p className="text-xs text-slate-500 mt-1">
+                              Example: Collection\Visual Pinball X\Tables or custom\subfolder
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Use table name checkbox - only show when form is expanded */}
+                        {showCustomFileForm && (
+                          <div className="flex items-center space-x-2">
+                            <Checkbox
+                              id="useTableNameCustom"
+                              checked={useTableNameForCustom}
+                              onCheckedChange={(checked) => setUseTableNameForCustom(!!checked)}
+                            />
+                            <Label htmlFor="useTableNameCustom" className="text-xs text-slate-600">
+                              Use table name as filename
+                            </Label>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Right side - Upload Button (matches other cards) */}
+                      <div className="flex flex-col items-center gap-3 ml-4">
+                        {!showCustomFileForm ? (
                           <Button
-                            onClick={() => document.getElementById('custom-file-input')?.click()}
-                            className="flex-1"
+                            variant="secondary"
+                            onClick={() => setShowCustomFileForm(true)}
+                            className="p-3 pl-[75px] pr-[75px] pt-[47px] pb-[47px] mt-[-9px] mb-[-9px] ml-[-5px] mr-[-5px]"
                           >
-                            Choose File
+                            <Plus className="h-6 w-6 text-slate-400" />
                           </Button>
-                          <Button
-                            variant="outline"
-                            onClick={() => setShowCustomFileForm(false)}
-                          >
-                            Cancel
-                          </Button>
-                        </div>
-                        
-                        <input
-                          id="custom-file-input"
-                          type="file"
-                          className="hidden"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            const locationInput = document.getElementById('customLocation') as HTMLInputElement;
-                            if (file && locationInput?.value.trim()) {
-                              handleCustomFileUpload(file, locationInput.value.trim());
-                              e.target.value = '';
-                              locationInput.value = 'Collection\\Visual Pinball X\\custom';
-                              setShowCustomFileForm(false);
-                            }
-                          }}
-                        />
+                        ) : (
+                          <div className="flex flex-col gap-2">
+                            <Button
+                              onClick={() => document.getElementById('custom-file-input')?.click()}
+                              className="px-4 py-2"
+                            >
+                              Choose File
+                            </Button>
+                            <Button
+                              variant="outline"
+                              onClick={() => setShowCustomFileForm(false)}
+                              className="px-4 py-2"
+                            >
+                              Cancel
+                            </Button>
+                          </div>
+                        )}
                       </div>
                     </div>
-                  )}
-                  
-                  {/* Keep add button at bottom if form is shown and files exist */}
-                  {showCustomFileForm && additionalFiles.filter(file => file.category === 'custom').length > 0 && (
-                    <Button
-                      variant="outline"
-                      onClick={() => setShowCustomFileForm(true)}
-                      className="w-full border-dashed border-2 border-slate-300 hover:border-slate-400 py-4 mt-4"
-                    >
-                      <Plus className="h-4 w-4 mr-2 text-slate-500" />
-                      Add Another Custom File
-                    </Button>
-                  )}
+
+                    <input
+                      id="custom-file-input"
+                      type="file"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        const locationInput = document.getElementById('customLocation') as HTMLInputElement;
+                        if (file && locationInput?.value.trim()) {
+                          handleCustomFileUpload(file, locationInput.value.trim());
+                          e.target.value = '';
+                          locationInput.value = 'Collection\\Visual Pinball X\\custom';
+                          setShowCustomFileForm(false);
+                        }
+                      }}
+                    />
+                  </div>
                 </div>
               </CardContent>
             </Card>
