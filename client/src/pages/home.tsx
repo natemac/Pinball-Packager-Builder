@@ -419,148 +419,7 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            {/* Step 3: Package Generation */}
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center mb-4">
-                  <div className={`w-8 h-8 ${tableFile ? 'bg-blue-600' : 'bg-slate-300'} text-white rounded-full flex items-center justify-center text-sm font-bold mr-3`}>
-                    3
-                  </div>
-                  <h2 className="text-lg font-semibold text-slate-900">Generate Package</h2>
-                </div>
 
-                <div className="bg-slate-50 rounded-lg p-4 mb-4">
-                  <div className="flex items-center justify-between mb-4">
-                    <div>
-                      <p className="font-medium text-slate-900">
-                        Package: {tableFile ? `${tableFile.name}_Package.zip` : 'No file selected'}
-                      </p>
-                      <p className="text-sm text-slate-500">
-                        {totalFiles} file{totalFiles !== 1 ? 's' : ''} ready for packaging
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm text-slate-500">Estimated size</p>
-                      <p className="font-medium text-slate-900">{estimatedSize}</p>
-                    </div>
-                  </div>
-
-                  {/* Convert & Compress Sections */}
-                  <div className="space-y-4 mb-4">
-                    {/* Images and Videos Side by Side */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                      {/* Images Section */}
-                      <div className="border border-slate-200 rounded-lg p-3 bg-white">
-                        <h4 className="font-medium text-slate-900 mb-3">Images</h4>
-                        <div className="space-y-4">
-                          <div className="flex items-center space-x-2">
-                            <Checkbox
-                              id="convertImages"
-                              checked={settings.convertImages}
-                              onCheckedChange={(checked) => 
-                                updateSettings({ ...settings, convertImages: !!checked })
-                              }
-                            />
-                            <Label htmlFor="convertImages" className="text-sm">
-                              Convert to PNG
-                            </Label>
-                          </div>
-                          <div>
-                            <Label htmlFor="imageCompression" className="text-sm font-medium">
-                              Compression
-                            </Label>
-                            <Select
-                              value={settings.imageCompression}
-                              onValueChange={(value: PackageSettings['imageCompression']) => 
-                                updateSettings({ ...settings, imageCompression: value })
-                              }
-                            >
-                              <SelectTrigger className="mt-1">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="none">Do not Compress</SelectItem>
-                                <SelectItem value="low">Low</SelectItem>
-                                <SelectItem value="medium">Medium</SelectItem>
-                                <SelectItem value="high">High</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Videos Section */}
-                      <div className="border border-slate-200 rounded-lg p-3 bg-white">
-                        <h4 className="font-medium text-slate-900 mb-3">Videos</h4>
-                        <div className="space-y-4">
-                          <div className="flex items-center space-x-2">
-                            <Checkbox
-                              id="convertVideos"
-                              checked={settings.convertVideos}
-                              onCheckedChange={(checked) => 
-                                updateSettings({ ...settings, convertVideos: !!checked })
-                              }
-                            />
-                            <Label htmlFor="convertVideos" className="text-sm">
-                              Convert to MP4
-                            </Label>
-                          </div>
-                          <div>
-                            <Label htmlFor="videoCompression" className="text-sm font-medium">
-                              Compression
-                            </Label>
-                            <Select
-                              value={settings.videoCompression}
-                              onValueChange={(value: PackageSettings['videoCompression']) => 
-                                updateSettings({ ...settings, videoCompression: value })
-                              }
-                            >
-                              <SelectTrigger className="mt-1">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="none">Do not Compress</SelectItem>
-                                <SelectItem value="low">Low</SelectItem>
-                                <SelectItem value="medium">Medium</SelectItem>
-                                <SelectItem value="high">High</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-
-                  </div>
-                </div>
-
-                <Button
-                  onClick={handleGeneratePackage}
-                  disabled={!tableFile || isGenerating}
-                  className="w-full py-3"
-                  size="lg"
-                >
-                  <Download className="h-4 w-4 mr-2" />
-                  Generate Package
-                </Button>
-
-                {/* Progress Bar */}
-                {isGenerating && (
-                  <div className="mt-4">
-                    <div className="flex justify-between text-sm text-slate-600 mb-2">
-                      <span>Packaging files...</span>
-                      <span>{Math.round(generationProgress)}%</span>
-                    </div>
-                    <div className="w-full bg-slate-200 rounded-full h-2">
-                      <div
-                        className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                        style={{ width: `${generationProgress}%` }}
-                      />
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
           </div>
 
           {/* Sidebar */}
@@ -570,6 +429,96 @@ export default function Home() {
               additionalFiles={additionalFiles}
               settings={settings}
             />
+
+            {/* Generate Package Card */}
+            <Card>
+              <CardContent className="p-6">
+                <h3 className="font-semibold text-slate-900 mb-4 flex items-center">
+                  <Box className="h-5 w-5 mr-2" />
+                  Generate Package
+                </h3>
+
+                <div className="space-y-4">
+                  <div className="bg-slate-50 rounded-lg p-3">
+                    <p className="font-medium text-slate-900 text-sm">
+                      {tableFile ? `${tableFile.name}_Package.zip` : 'No file selected'}
+                    </p>
+                    <p className="text-xs text-slate-500">
+                      {totalFiles} file{totalFiles !== 1 ? 's' : ''} • {estimatedSize}
+                    </p>
+                  </div>
+
+                  {/* Compression Settings */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="imageComp" className="text-xs font-medium">Image Compression</Label>
+                      <Select
+                        value={settings.imageCompression}
+                        onValueChange={(value: PackageSettings['imageCompression']) => 
+                          updateSettings({ ...settings, imageCompression: value })
+                        }
+                      >
+                        <SelectTrigger className="w-24 h-7 text-xs">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">None</SelectItem>
+                          <SelectItem value="low">Low</SelectItem>
+                          <SelectItem value="medium">Med</SelectItem>
+                          <SelectItem value="high">High</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="videoComp" className="text-xs font-medium">Video Compression</Label>
+                      <Select
+                        value={settings.videoCompression}
+                        onValueChange={(value: PackageSettings['videoCompression']) => 
+                          updateSettings({ ...settings, videoCompression: value })
+                        }
+                      >
+                        <SelectTrigger className="w-24 h-7 text-xs">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">None</SelectItem>
+                          <SelectItem value="low">Low</SelectItem>
+                          <SelectItem value="medium">Med</SelectItem>
+                          <SelectItem value="high">High</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <Button
+                    onClick={handleGeneratePackage}
+                    disabled={!tableFile || isGenerating}
+                    className="w-full"
+                    size="sm"
+                  >
+                    <Download className="h-4 w-4 mr-2" />
+                    Generate Package
+                  </Button>
+
+                  {/* Progress Bar */}
+                  {isGenerating && (
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs text-slate-600">
+                        <span>Packaging...</span>
+                        <span>{Math.round(generationProgress)}%</span>
+                      </div>
+                      <div className="w-full bg-slate-200 rounded-full h-1.5">
+                        <div
+                          className="bg-blue-600 h-1.5 rounded-full transition-all duration-300"
+                          style={{ width: `${generationProgress}%` }}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
 
             <AddedFilesList
               files={additionalFiles}
