@@ -27,6 +27,8 @@ export default function Home() {
   const [showSettings, setShowSettings] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationProgress, setGenerationProgress] = useState(0);
+  const [showCustomFileForm, setShowCustomFileForm] = useState(false);
+  const [useTableNameForCustom, setUseTableNameForCustom] = useState(false);
 
   const {
     tableFile,
@@ -298,26 +300,51 @@ export default function Home() {
                     uploadedFile={getFileForCategory('marqueeVideo')}
                   />
 
-                  <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                    <h3 className="font-medium text-blue-900 mb-3 flex items-center">
-                      <span className="text-blue-500 mr-2">+</span>
-                      Additional Files
-                    </h3>
-                    <div className="border border-slate-200 rounded-lg p-6 bg-white">
+
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Custom Files Card */}
+            <Card className="w-full">
+              <CardContent className="p-6">
+                <div className="space-y-4">
+                  <h2 className="text-lg font-semibold text-slate-700 mb-4">Custom Files</h2>
+                  
+                  {/* Show custom files if any */}
+                  {additionalFiles.filter(file => file.category === 'custom').map((file) => (
+                    <div key={file.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+                      <div>
+                        <p className="font-medium text-slate-700">{file.originalName}</p>
+                        <p className="text-sm text-slate-500">{file.customLocation}</p>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeAdditionalFile(file.id)}
+                        className="text-red-600 hover:text-red-700"
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  ))}
+                  
+                  {/* Add Custom Files Button */}
+                  {!showCustomFileForm && (
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowCustomFileForm(true)}
+                      className="w-full border-dashed border-2 border-slate-300 hover:border-slate-400 py-8"
+                    >
+                      <Plus className="h-5 w-5 mr-2 text-slate-500" />
+                      Add Custom Files
+                    </Button>
+                  )}
+                  
+                  {/* Expanded form when button is clicked */}
+                  {showCustomFileForm && (
+                    <div className="border border-slate-200 rounded-lg p-4 bg-slate-50">
                       <div className="space-y-4">
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <h3 className="font-medium text-slate-700 mb-1">Add Additional File</h3>
-                            <p className="text-sm text-slate-500 mb-3">Upload any additional file for your package</p>
-                          </div>
-                          <Button
-                            variant="secondary"
-                            onClick={() => document.getElementById('custom-file-input')?.click()}
-                            className="p-3 pl-[75px] pr-[75px] pt-[47px] pb-[47px] mt-[-9px] mb-[-9px] ml-[-5px] mr-[-5px]"
-                          >
-                            <Plus className="h-6 w-6 text-slate-400" />
-                          </Button>
-                        </div>
                         <div>
                           <Label htmlFor="customLocation" className="text-sm font-medium">
                             File Location
@@ -326,11 +353,39 @@ export default function Home() {
                             id="customLocation"
                             placeholder="Collection\Visual Pinball X\custom"
                             className="mt-1"
+                            defaultValue="Collection\Visual Pinball X\custom"
                           />
                           <p className="text-xs text-slate-500 mt-1">
                             Example: Collection\Visual Pinball X\Tables or Collection\Visual Pinball X\custom\subfolder
                           </p>
                         </div>
+                        
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="useTableNameCustom"
+                            checked={useTableNameForCustom}
+                            onCheckedChange={setUseTableNameForCustom}
+                          />
+                          <Label htmlFor="useTableNameCustom" className="text-sm">
+                            Use table name as filename
+                          </Label>
+                        </div>
+                        
+                        <div className="flex space-x-2">
+                          <Button
+                            onClick={() => document.getElementById('custom-file-input')?.click()}
+                            className="flex-1"
+                          >
+                            Choose File
+                          </Button>
+                          <Button
+                            variant="outline"
+                            onClick={() => setShowCustomFileForm(false)}
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                        
                         <input
                           id="custom-file-input"
                           type="file"
@@ -342,12 +397,25 @@ export default function Home() {
                               handleCustomFileUpload(file, locationInput.value.trim());
                               e.target.value = '';
                               locationInput.value = 'Collection\\Visual Pinball X\\custom';
+                              setShowCustomFileForm(false);
                             }
                           }}
                         />
                       </div>
                     </div>
-                  </div>
+                  )}
+                  
+                  {/* Keep add button at bottom if form is shown and files exist */}
+                  {showCustomFileForm && additionalFiles.filter(file => file.category === 'custom').length > 0 && (
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowCustomFileForm(true)}
+                      className="w-full border-dashed border-2 border-slate-300 hover:border-slate-400 py-4 mt-4"
+                    >
+                      <Plus className="h-4 w-4 mr-2 text-slate-500" />
+                      Add Another Custom File
+                    </Button>
+                  )}
                 </div>
               </CardContent>
             </Card>
