@@ -12,6 +12,7 @@ const defaultSettings: PackageSettings = {
   imageCompression: 'none',
   videoCompression: 'none',
   compressionLevel: 'normal',
+  includeTableFile: true,
   tableFileSettings: {
     useTableName: false,
     prefix: '',

@@ -240,6 +240,8 @@ export default function Home() {
                   onFileUpload={handleTableFileUpload}
                   acceptedTypes={['.vpx', '.fp']}
                   tableFile={tableFile}
+                  settings={settings}
+                  onSettingsChange={updateSettings}
                 />
               </CardContent>
             </Card>

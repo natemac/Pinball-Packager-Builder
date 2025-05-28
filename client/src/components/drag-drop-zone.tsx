@@ -1,16 +1,20 @@
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { CloudUpload, CheckCircle } from "lucide-react";
-import type { TableFile } from "@shared/schema";
+import type { TableFile, PackageSettings } from "@shared/schema";
 
 interface DragDropZoneProps {
   onFileUpload: (file: File) => void;
   acceptedTypes: string[];
   tableFile: TableFile | null;
+  settings: PackageSettings;
+  onSettingsChange: (settings: PackageSettings) => void;
 }
 
-export default function DragDropZone({ onFileUpload, acceptedTypes, tableFile }: DragDropZoneProps) {
+export default function DragDropZone({ onFileUpload, acceptedTypes, tableFile, settings, onSettingsChange }: DragDropZoneProps) {
   const [dragActive, setDragActive] = useState(false);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -54,13 +58,27 @@ export default function DragDropZone({ onFileUpload, acceptedTypes, tableFile }:
       {/* File Detection Result */}
       {tableFile && (
         <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
-          <div className="flex items-center">
-            <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
-            <div>
-              <p className="text-sm font-medium text-green-800">{tableFile.file.name}</p>
-              <p className="text-xs text-green-600">
-                {tableFile.type === 'vpx' ? 'Visual Pinball X' : 'Future Pinball'} Table Detected
-              </p>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
+              <div>
+                <p className="text-sm font-medium text-green-800">{tableFile.file.name}</p>
+                <p className="text-xs text-green-600">
+                  {tableFile.type === 'vpx' ? 'Visual Pinball X' : 'Future Pinball'} Table Detected
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-2 ml-4">
+              <Checkbox
+                id="includeTableFile"
+                checked={settings.includeTableFile}
+                onCheckedChange={(checked) => 
+                  onSettingsChange({ ...settings, includeTableFile: !!checked })
+                }
+              />
+              <Label htmlFor="includeTableFile" className="text-xs text-green-700 font-medium">
+                Include in package
+              </Label>
             </div>
           </div>
         </div>

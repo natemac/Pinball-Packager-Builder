@@ -78,6 +78,7 @@ export interface PackageSettings {
   imageCompression: 'none' | 'low' | 'medium' | 'high';
   videoCompression: 'none' | 'low' | 'medium' | 'high';
   compressionLevel: 'low' | 'normal' | 'high';
+  includeTableFile: boolean;
   tableFileSettings: FileLocationSettings;
   fileSettings: {
     cover: FileLocationSettings;
