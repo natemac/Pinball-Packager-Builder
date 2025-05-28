@@ -460,6 +460,7 @@ export default function Home() {
               tableFile={tableFile}
               additionalFiles={additionalFiles}
               settings={settings}
+              customFiles={customFiles}
             />
 
             {/* Generate Package Card */}

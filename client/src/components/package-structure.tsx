@@ -6,12 +6,14 @@ interface PackageStructureProps {
   tableFile: TableFile | null;
   additionalFiles: AdditionalFile[];
   settings: PackageSettings;
+  customFiles?: Array<{id: string, location: string, file?: File, useTableName?: boolean}>;
 }
 
 export default function PackageStructure({
   tableFile,
   additionalFiles,
-  settings
+  settings,
+  customFiles = []
 }: PackageStructureProps) {
   const gameType = tableFile?.type === 'vpx' ? 'Visual Pinball X' : 'Future Pinball';
   const tableName = tableFile?.name || 'table_name';
@@ -117,22 +119,42 @@ export default function PackageStructure({
   };
 
   const getDisplayFileName = (file: AdditionalFile) => {
-    const fileSettings = settings.fileSettings[file.category];
     const extension = file.originalName.split('.').pop() || '';
     
     let fileName = '';
+    let useTableName = false;
+    let prefix = '';
+    let suffix = '';
     
-    if (fileSettings?.useTableName) {
-      // Use table name with prefix/suffix
-      const prefix = fileSettings.prefix || '';
-      const suffix = fileSettings.suffix || '';
-      fileName = `${prefix}${tableName}${suffix}`;
+    // Handle custom files differently
+    if (file.customFileId) {
+      // Find the corresponding custom file to get its useTableName setting
+      const customFile = customFiles.find(cf => cf.id === file.customFileId);
+      useTableName = customFile?.useTableName || false;
+      
+      if (useTableName) {
+        // Use table name for custom files
+        fileName = tableName;
+      } else {
+        // Use original name for custom files
+        const baseName = file.originalName.replace(/\.[^/.]+$/, '');
+        fileName = baseName;
+      }
     } else {
-      // Use original name with prefix/suffix
-      const baseName = file.originalName.replace(/\.[^/.]+$/, '');
-      const prefix = fileSettings?.prefix || '';
-      const suffix = fileSettings?.suffix || '';
-      fileName = `${prefix}${baseName}${suffix}`;
+      // Regular file categories
+      const fileSettings = settings.fileSettings[file.category];
+      useTableName = fileSettings?.useTableName || false;
+      prefix = fileSettings?.prefix || '';
+      suffix = fileSettings?.suffix || '';
+      
+      if (useTableName) {
+        // Use table name with prefix/suffix
+        fileName = `${prefix}${tableName}${suffix}`;
+      } else {
+        // Use original name with prefix/suffix
+        const baseName = file.originalName.replace(/\.[^/.]+$/, '');
+        fileName = `${prefix}${baseName}${suffix}`;
+      }
     }
     
     // Handle image conversion to PNG
