@@ -4,14 +4,13 @@ import { PackageBuilder } from '@/lib/package-builder';
 import { generateUniqueId } from '@/lib/file-utils';
 
 const defaultSettings: PackageSettings = {
-  baseDirectory: 'Collection',
-  mediaFolder: 'media',
-  preserveExtensions: true,
   convertImages: false,
   convertVideos: false,
   imageCompression: 'none',
   videoCompression: 'none',
+  preserveExtensions: true,
   compressionLevel: 'normal',
+  includeTableFile: true,
   tableFileSettings: {
     useTableName: false,
     prefix: '',

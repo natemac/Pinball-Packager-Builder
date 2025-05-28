@@ -70,14 +70,13 @@ export interface FileLocationSettings {
 }
 
 export interface PackageSettings {
-  baseDirectory: string;
-  mediaFolder: string;
-  preserveExtensions: boolean;
   convertImages: boolean;
   convertVideos: boolean;
   imageCompression: 'none' | 'low' | 'medium' | 'high';
   videoCompression: 'none' | 'low' | 'medium' | 'high';
+  preserveExtensions: boolean;
   compressionLevel: 'low' | 'normal' | 'high';
+  includeTableFile?: boolean;
   tableFileSettings: FileLocationSettings;
   fileSettings: {
     cover: FileLocationSettings;

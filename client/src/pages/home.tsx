@@ -374,6 +374,25 @@ export default function Home() {
                     </div>
                   </div>
 
+                  {/* Include Table File Checkbox */}
+                  <div className="mb-4 p-3 bg-white border border-slate-200 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="includeTableFile"
+                        checked={settings.includeTableFile ?? true}
+                        onCheckedChange={(checked) => 
+                          updateSettings({ ...settings, includeTableFile: !!checked })
+                        }
+                      />
+                      <Label htmlFor="includeTableFile" className="text-sm font-medium">
+                        Include Table File
+                      </Label>
+                    </div>
+                    <p className="text-xs text-slate-500 ml-6 mt-1">
+                      When unchecked, only the frontend files will be packaged
+                    </p>
+                  </div>
+
                   {/* Convert & Compress Sections */}
                   <div className="space-y-4 mb-4">
                     {/* Images and Videos Side by Side */}
