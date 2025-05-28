@@ -35,7 +35,12 @@ export class PackageBuilder {
   }
 
   private getCategoryPath(category: AdditionalFile['category'], gameType: 'vpx' | 'fp'): string {
-    const fileSettings = this.settings.fileSettings[category];
+    // Skip category path for custom files as they have their own location
+    if (category === 'custom') {
+      return '';
+    }
+    
+    const fileSettings = this.settings.fileSettings[category as keyof typeof this.settings.fileSettings];
     if (fileSettings?.location) {
       // Use the custom location if specified
       let location = fileSettings.location;
@@ -53,7 +58,12 @@ export class PackageBuilder {
   }
 
   private getFileName(originalName: string, tableName: string, category: AdditionalFile['category']): string {
-    const fileSettings = this.settings.fileSettings[category];
+    // Skip file name processing for custom files - use original name
+    if (category === 'custom') {
+      return originalName;
+    }
+    
+    const fileSettings = this.settings.fileSettings[category as keyof typeof this.settings.fileSettings];
     const extension = originalName.split('.').pop() || '';
     
     let fileName = '';
