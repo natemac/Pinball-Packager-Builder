@@ -57,8 +57,10 @@ export interface TableFile {
 export interface AdditionalFile {
   id: string;
   file: File;
-  originalName: string;
   category: 'cover' | 'topper' | 'tableVideo' | 'marqueeVideo' | 'directb2s' | 'music' | 'scripts';
+  originalName: string;
+  customLocation?: string;
+  customFileId?: string;
   size: number;
 }
 

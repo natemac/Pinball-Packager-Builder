@@ -21,13 +21,13 @@ export class PackageBuilder {
     if (compression === 'STORE') {
       return { compression, compressionOptions: { level: 0 } };
     }
-    
+
     const levelMap = {
       fast: 1,
       normal: 6,
       maximum: 9
     };
-    
+
     return {
       compression,
       compressionOptions: { level: levelMap[this.settings.compressionLevel as keyof typeof levelMap] || 6 }
@@ -39,15 +39,15 @@ export class PackageBuilder {
     if (fileSettings?.location) {
       // Use the custom location if specified
       let location = fileSettings.location;
-      
+
       // Replace game type placeholder if needed
       const gameTypeName = gameType === 'vpx' ? 'Visual Pinball X' : 'Future Pinball';
       location = location.replace(/Visual Pinball X|Future Pinball/g, gameTypeName);
-      
+
       // Convert backslashes to forward slashes for consistent path handling
       return location.replace(/\\/g, '/');
     }
-    
+
     // Return empty string if no location is set - let the settings define all paths
     return '';
   }
@@ -55,37 +55,37 @@ export class PackageBuilder {
   private getFileName(originalName: string, tableName: string, category: AdditionalFile['category']): string {
     const fileSettings = this.settings.fileSettings[category];
     const extension = originalName.split('.').pop() || '';
-    
+
     let fileName = '';
-    
+
     if (fileSettings?.useTableName) {
       // Use table name with prefix/suffix
       const sanitizedTableName = sanitizeFileName(tableName);
       const prefix = fileSettings.prefix || '';
       const suffix = fileSettings.suffix || '';
-      
+
       fileName = `${prefix}${sanitizedTableName}${suffix}`;
     } else {
       // Use original name with prefix/suffix
       const baseName = removeFileExtension(originalName);
       const prefix = fileSettings?.prefix || '';
       const suffix = fileSettings?.suffix || '';
-      
+
       fileName = `${prefix}${baseName}${suffix}`;
     }
-    
+
     // Handle image conversion to PNG
     if (this.settings.convertImages && 
         (category === 'cover' || category === 'topper') &&
         extension && ['jpg', 'jpeg', 'png', 'gif', 'bmp'].includes(extension.toLowerCase())) {
       return `${fileName}.png`;
     }
-    
+
     // Add original extension
     if (this.settings.preserveExtensions && extension) {
       return `${fileName}.${extension}`;
     }
-    
+
     return `${fileName}.${extension}`;
   }
 
@@ -94,24 +94,24 @@ export class PackageBuilder {
     if (!this.settings.includeTableFile) {
       return;
     }
-    
+
     const tableFileSettings = this.settings.tableFileSettings;
-    
+
     if (!tableFileSettings?.location) {
       // Skip adding table file if no location is set in settings
       return;
     }
-    
+
     // Use the custom location from settings
     let location = tableFileSettings.location;
-    
+
     // Replace game type placeholder if needed
     const gameTypeName = tableFile.type === 'vpx' ? 'Visual Pinball X' : 'Future Pinball';
     location = location.replace(/Visual Pinball X|Future Pinball/g, gameTypeName);
-    
+
     // Convert backslashes to forward slashes for consistent path handling
     location = location.replace(/\\/g, '/');
-    
+
     // Get the filename with prefix/suffix
     let fileName = tableFile.file.name;
     if (tableFileSettings.useTableName) {
@@ -127,14 +127,14 @@ export class PackageBuilder {
       const suffix = tableFileSettings.suffix || '';
       fileName = `${prefix}${baseName}${suffix}.${extension}`;
     }
-    
+
     const filePath = `${location}/${fileName}`;
     this.zip.file(filePath, tableFile.file, this.getCompressionOptions());
   }
 
   private async processImageFile(file: File): Promise<File> {
     let processedFile = file;
-    
+
     // Convert to PNG if enabled
     if (this.settings.convertImages && !file.name.toLowerCase().endsWith('.png')) {
       try {
@@ -143,7 +143,7 @@ export class PackageBuilder {
         console.warn('Failed to convert image to PNG, using original file:', error);
       }
     }
-    
+
     // Apply image compression if enabled
     if (this.settings.imageCompression !== 'none') {
       try {
@@ -152,13 +152,13 @@ export class PackageBuilder {
         console.warn('Failed to compress image, using original file:', error);
       }
     }
-    
+
     return processedFile;
   }
 
   private async processVideoFile(file: File): Promise<File> {
     let processedFile = file;
-    
+
     // Convert to MP4 if enabled
     if (this.settings.convertVideos && !file.name.toLowerCase().endsWith('.mp4')) {
       try {
@@ -167,7 +167,7 @@ export class PackageBuilder {
         console.warn('Failed to convert video to MP4, using original file:', error);
       }
     }
-    
+
     // Apply video compression if enabled
     if (this.settings.videoCompression !== 'none') {
       try {
@@ -176,7 +176,7 @@ export class PackageBuilder {
         console.warn('Failed to compress video, using original file:', error);
       }
     }
-    
+
     return processedFile;
   }
 
@@ -185,21 +185,21 @@ export class PackageBuilder {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       const img = new Image();
-      
+
       img.onload = () => {
         canvas.width = img.width;
         canvas.height = img.height;
-        
+
         if (ctx) {
           ctx.drawImage(img, 0, 0);
-          
+
           // Compression quality based on level
           const qualityMap = {
             low: 0.8,
             medium: 0.6,
             high: 0.4
           };
-          
+
           canvas.toBlob((blob) => {
             if (blob) {
               const compressedFile = new File([blob], file.name, { type: 'image/png' });
@@ -212,7 +212,7 @@ export class PackageBuilder {
           resolve(file);
         }
       };
-      
+
       img.onerror = () => resolve(file);
       img.src = URL.createObjectURL(file);
     });
@@ -234,27 +234,27 @@ export class PackageBuilder {
 
   async addAdditionalFile(file: AdditionalFile, tableName: string, gameType: 'vpx' | 'fp'): Promise<void> {
     const categoryPath = this.getCategoryPath(file.category, gameType);
-    
+
     // Skip adding file if no location is set in settings
     if (!categoryPath) {
       return;
     }
-    
+
     const fileName = this.getFileName(file.originalName, tableName, file.category);
     const filePath = `${categoryPath}/${fileName}`;
-    
+
     let fileToAdd = file.file;
-    
+
     // Process images
     if (file.category === 'cover' || file.category === 'topper') {
       fileToAdd = await this.processImageFile(file.file);
     }
-    
+
     // Process videos
     if (file.category === 'tableVideo' || file.category === 'marqueeVideo') {
       fileToAdd = await this.processVideoFile(file.file);
     }
-    
+
     this.zip.file(filePath, fileToAdd, this.getCompressionOptions());
   }
 
@@ -265,12 +265,12 @@ export class PackageBuilder {
   ): Promise<void> {
     // Add table file
     await this.addTableFile(tableFile);
-    
+
     // Add additional files
     for (const file of additionalFiles) {
       await this.addAdditionalFile(file, tableFile.name, tableFile.type);
     }
-    
+
     // Generate zip file
     const content = await this.zip.generateAsync(
       {
@@ -284,7 +284,7 @@ export class PackageBuilder {
         }
       }
     );
-    
+
     // Download the file
     const fileName = `${sanitizeFileName(tableFile.name)}_Package.zip`;
     saveAs(content, fileName);

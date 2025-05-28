@@ -69,7 +69,17 @@ export default function PackageStructure({
     return `${settings.baseDirectory}/${gameTypeName}`;
   };
 
-  const getCategoryPath = (category: AdditionalFile['category']) => {
+  const getCategoryPath = (category: AdditionalFile['category'], customLocation?: string) => {
+    // Use custom location if provided (for custom files)
+    if (customLocation) {
+      // Replace game type placeholder if needed
+      const gameTypeName = tableFile?.type === 'vpx' ? 'Visual Pinball X' : 'Future Pinball';
+      let location = customLocation.replace(/Visual Pinball X|Future Pinball/g, gameTypeName);
+      
+      // Convert backslashes to forward slashes for display
+      return location.replace(/\\/g, '/');
+    }
+    
     const fileSettings = settings.fileSettings[category];
     if (fileSettings?.location) {
       // Use the custom location if specified
@@ -198,7 +208,7 @@ export default function PackageStructure({
 
     // Build tree structure from file paths
     additionalFiles.forEach(file => {
-      const fullPath = getCategoryPath(file.category);
+      const fullPath = getCategoryPath(file.category, file.customLocation);
       const pathParts = fullPath.split('/').filter(part => part);
       const fileName = getDisplayFileName(file);
 

@@ -107,7 +107,7 @@ export default function Home() {
   // Custom files management
   const addCustomFileDialog = () => {
     const newId = `custom-${Date.now()}`;
-    setCustomFiles(prev => [...prev, { id: newId, location: '' }]);
+    setCustomFiles(prev => [...prev, { id: newId, location: 'Collection/Custom Files' }]);
   };
 
   const updateCustomFileLocation = (id: string, location: string) => {
@@ -116,12 +116,21 @@ export default function Home() {
 
   const handleCustomFileUpload = (id: string, file: File) => {
     setCustomFiles(prev => prev.map(cf => cf.id === id ? { ...cf, file } : cf));
-    // Also add to additional files for processing
-    handleAdditionalFileUpload(file, 'scripts');
+    // Add to additional files for processing with custom category
+    const customFile = customFiles.find(cf => cf.id === id);
+    const newAdditionalFile: AdditionalFile = {
+      id: generateUniqueId(),
+      file,
+      category: 'scripts', // We'll use scripts as base category but override location
+      originalName: file.name,
+      customLocation: customFile?.location || `Collection/Custom Files`
+    };
+    setAdditionalFiles(prev => [...prev.filter(f => f.customFileId !== id), { ...newAdditionalFile, customFileId: id }]);
   };
 
   const removeCustomFile = (id: string) => {
     setCustomFiles(prev => prev.filter(cf => cf.id !== id));
+    setAdditionalFiles(prev => prev.filter(f => f.customFileId !== id));
   };
 
   const handleGeneratePackage = async () => {
