@@ -76,6 +76,20 @@ export default function Home() {
   };
 
   const handleAdditionalFileUpload = (file: File, category: AdditionalFile['category']) => {
+    // Check for filename conflicts when "Use table name as filename" is enabled
+    const categorySettings = settings.fileSettings[category];
+    if (categorySettings?.useTableName && tableFile) {
+      const existingFilesInCategory = additionalFiles.filter(f => f.category === category);
+      if (existingFilesInCategory.length > 0) {
+        toast({
+          title: "Error",
+          description: "Two files with the same name can't be added to the same folder. To add multiple files to this folder, uncheck \"Use table name as filename.\"",
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
     addAdditionalFile(file, category);
     toast({
       title: "File Added",
@@ -84,6 +98,19 @@ export default function Home() {
   };
 
   const handleUseTableNameChange = (category: AdditionalFile['category'], use: boolean) => {
+    // Check for potential conflicts when enabling "Use table name as filename"
+    if (use && tableFile) {
+      const existingFilesInCategory = additionalFiles.filter(f => f.category === category);
+      if (existingFilesInCategory.length > 1) {
+        toast({
+          title: "Error",
+          description: "Cannot use table name as filename when multiple files exist in this category. Remove extra files first.",
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
     updateSettings({
       ...settings,
       fileSettings: {

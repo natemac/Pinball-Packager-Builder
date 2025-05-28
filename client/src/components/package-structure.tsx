@@ -178,6 +178,7 @@ export default function PackageStructure({
     children: TreeNode[];
     file?: AdditionalFile;
     path: string;
+    uniqueKey?: string;
   }
 
   const buildFileTree = () => {
@@ -258,13 +259,14 @@ export default function PackageStructure({
         currentNode = existingNode;
       });
 
-      // Add file to final directory
+      // Add file to final directory with unique key using file ID
       currentNode.children.push({
         name: fileName,
         type: 'file',
         children: [],
         file,
-        path: `${fullPath}/${fileName}`
+        path: `${fullPath}/${fileName}`,
+        uniqueKey: file.id // Add unique identifier for React key
       });
     });
 
@@ -278,7 +280,7 @@ export default function PackageStructure({
     if (depth > 0) { // Don't render the root "Package" node
       elements.push(
         <div 
-          key={node.path} 
+          key={node.uniqueKey || node.path} 
           className="flex items-center text-slate-700"
           style={{ paddingLeft: `${indent}px` }}
         >
