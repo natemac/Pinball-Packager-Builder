@@ -158,41 +158,43 @@ export default function PackageStructure({
       path: ''
     };
 
-    // Add table file using the table file settings
-    const tableFilePath = getTableFilePath();
-    const pathParts = tableFilePath.split('/').filter(part => part);
-    
-    let currentNode = root;
-    let currentPath = '';
-
-    // Navigate/create path for table file
-    pathParts.forEach((part, index) => {
-      currentPath = currentPath ? `${currentPath}/${part}` : part;
+    // Add table file using the table file settings (only if includeTableFile is not false)
+    if (settings.includeTableFile !== false) {
+      const tableFilePath = getTableFilePath();
+      const pathParts = tableFilePath.split('/').filter(part => part);
       
-      let existingNode = currentNode.children.find(child => 
-        child.name === part && child.type === 'folder'
-      );
+      let currentNode = root;
+      let currentPath = '';
 
-      if (!existingNode) {
-        existingNode = {
-          name: part,
-          type: 'folder',
-          children: [],
-          path: currentPath
-        };
-        currentNode.children.push(existingNode);
-      }
+      // Navigate/create path for table file
+      pathParts.forEach((part, index) => {
+        currentPath = currentPath ? `${currentPath}/${part}` : part;
+        
+        let existingNode = currentNode.children.find(child => 
+          child.name === part && child.type === 'folder'
+        );
 
-      currentNode = existingNode;
-    });
+        if (!existingNode) {
+          existingNode = {
+            name: part,
+            type: 'folder',
+            children: [],
+            path: currentPath
+          };
+          currentNode.children.push(existingNode);
+        }
 
-    // Add the table file itself
-    currentNode.children.push({
-      name: tableFile.file.name,
-      type: 'file',
-      children: [],
-      path: `${tableFilePath}/${tableFile.file.name}`
-    });
+        currentNode = existingNode;
+      });
+
+      // Add the table file itself
+      currentNode.children.push({
+        name: tableFile.file.name,
+        type: 'file',
+        children: [],
+        path: `${tableFilePath}/${tableFile.file.name}`
+      });
+    }
 
     // Build tree structure from file paths
     additionalFiles.forEach(file => {

@@ -153,13 +153,13 @@ export default function Home() {
     }
   };
 
-  const totalFiles = additionalFiles.length + (tableFile ? 1 : 0);
+  const totalFiles = additionalFiles.length + (tableFile && settings.includeTableFile !== false ? 1 : 0);
   const estimatedSize = calculateEstimatedSize();
 
   function calculateEstimatedSize(): string {
     let totalBytes = 0;
 
-    if (tableFile) {
+    if (tableFile && settings.includeTableFile !== false) {
       totalBytes += tableFile.file.size;
     }
 
@@ -520,6 +520,7 @@ export default function Home() {
               tableFile={tableFile}
               onRemoveFile={removeAdditionalFile}
               onRemoveTableFile={() => setTableFile(null)}
+              settings={settings}
             />
 
             {/* File Location Setup */}
