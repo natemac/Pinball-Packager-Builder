@@ -228,14 +228,24 @@ export class PackageBuilder {
   }
 
   async addAdditionalFile(file: AdditionalFile, tableName: string, gameType: 'vpx' | 'fp'): Promise<void> {
-    const categoryPath = this.getCategoryPath(file.category, gameType);
+    let categoryPath: string;
+    let fileName: string;
     
-    // Skip adding file if no location is set in settings
-    if (!categoryPath) {
-      return;
+    // Handle custom files with custom locations
+    if (file.category === 'custom' && file.customLocation) {
+      categoryPath = file.customLocation.replace(/\\/g, '/');
+      fileName = file.originalName;
+    } else {
+      categoryPath = this.getCategoryPath(file.category, gameType);
+      
+      // Skip adding file if no location is set in settings
+      if (!categoryPath) {
+        return;
+      }
+      
+      fileName = this.getFileName(file.originalName, tableName, file.category);
     }
     
-    const fileName = this.getFileName(file.originalName, tableName, file.category);
     const filePath = `${categoryPath}/${fileName}`;
     
     let fileToAdd = file.file;

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
@@ -11,10 +12,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Settings, HelpCircle, Box, Download } from "lucide-react";
+import { Settings, HelpCircle, Box, Download, Plus } from "lucide-react";
 import DragDropZone from "@/components/drag-drop-zone";
 import FileUploadCard from "@/components/file-upload-card";
-import CustomFileUploadCard from "@/components/custom-file-upload-card";
 import PackageStructure from "@/components/package-structure";
 import AddedFilesList from "@/components/added-files-list";
 import SettingsModal from "@/components/settings-modal";
@@ -90,12 +90,15 @@ export default function Home() {
   };
 
   const handleUseTableNameChange = (category: AdditionalFile['category'], use: boolean) => {
+    // Skip updating settings for custom files as they don't have predefined settings
+    if (category === 'custom') return;
+    
     updateSettings({
       ...settings,
       fileSettings: {
         ...settings.fileSettings,
         [category]: {
-          ...settings.fileSettings[category],
+          ...settings.fileSettings[category as keyof typeof settings.fileSettings],
           useTableName: use
         }
       }
@@ -300,7 +303,50 @@ export default function Home() {
                       <span className="text-blue-500 mr-2">+</span>
                       Additional Files
                     </h3>
-                    <CustomFileUploadCard onFileUpload={handleCustomFileUpload} />
+                    <div className="border border-slate-200 rounded-lg p-6 bg-white">
+                      <div className="space-y-4">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <h3 className="font-medium text-slate-700 mb-1">Add Additional File</h3>
+                            <p className="text-sm text-slate-500 mb-3">Upload any additional file for your package</p>
+                          </div>
+                          <Button
+                            variant="secondary"
+                            onClick={() => document.getElementById('custom-file-input')?.click()}
+                            className="p-3 pl-[75px] pr-[75px] pt-[47px] pb-[47px] mt-[-9px] mb-[-9px] ml-[-5px] mr-[-5px]"
+                          >
+                            <Plus className="h-6 w-6 text-slate-400" />
+                          </Button>
+                        </div>
+                        <div>
+                          <Label htmlFor="customLocation" className="text-sm font-medium">
+                            File Location
+                          </Label>
+                          <Input
+                            id="customLocation"
+                            placeholder="Collection\Visual Pinball X\custom"
+                            className="mt-1"
+                          />
+                          <p className="text-xs text-slate-500 mt-1">
+                            Example: Collection\Visual Pinball X\Tables or Collection\Visual Pinball X\custom\subfolder
+                          </p>
+                        </div>
+                        <input
+                          id="custom-file-input"
+                          type="file"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            const locationInput = document.getElementById('customLocation') as HTMLInputElement;
+                            if (file && locationInput?.value.trim()) {
+                              handleCustomFileUpload(file, locationInput.value.trim());
+                              e.target.value = '';
+                              locationInput.value = 'Collection\\Visual Pinball X\\custom';
+                            }
+                          }}
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </CardContent>
