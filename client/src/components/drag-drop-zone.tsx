@@ -3,7 +3,8 @@ import { useDropzone } from "react-dropzone";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { CloudUpload, CheckCircle } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { CloudUpload, CheckCircle, Edit3 } from "lucide-react";
 import type { TableFile, PackageSettings } from "@shared/schema";
 
 interface DragDropZoneProps {
@@ -12,9 +13,10 @@ interface DragDropZoneProps {
   tableFile: TableFile | null;
   settings: PackageSettings;
   onSettingsChange: (settings: PackageSettings) => void;
+  onTableNameChange: (name: string) => void;
 }
 
-export default function DragDropZone({ onFileUpload, acceptedTypes, tableFile, settings, onSettingsChange }: DragDropZoneProps) {
+export default function DragDropZone({ onFileUpload, acceptedTypes, tableFile, settings, onSettingsChange, onTableNameChange }: DragDropZoneProps) {
   const [dragActive, setDragActive] = useState(false);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -57,7 +59,7 @@ export default function DragDropZone({ onFileUpload, acceptedTypes, tableFile, s
 
       {/* File Detection Result */}
       {tableFile && (
-        <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+        <div className="p-4 bg-green-50 border border-green-200 rounded-lg space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
@@ -80,6 +82,24 @@ export default function DragDropZone({ onFileUpload, acceptedTypes, tableFile, s
                 Include in package
               </Label>
             </div>
+          </div>
+          
+          {/* Table Name Input */}
+          <div className="space-y-1">
+            <Label htmlFor="tableName" className="text-xs text-green-700 font-medium flex items-center">
+              <Edit3 className="h-3 w-3 mr-1" />
+              Table Name:
+            </Label>
+            <Input
+              id="tableName"
+              value={tableFile.name}
+              onChange={(e) => onTableNameChange(e.target.value)}
+              placeholder="Enter table name..."
+              className="text-sm bg-white border-green-200 focus:border-green-400"
+            />
+            <p className="text-xs text-green-600">
+              This name will be used for files with "Use table name as filename" enabled
+            </p>
           </div>
         </div>
       )}

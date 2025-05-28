@@ -180,6 +180,15 @@ export default function Home() {
     setAdditionalFiles(prev => prev.filter(f => f.customFileId !== id));
   };
 
+  const handleTableNameChange = (newName: string) => {
+    if (tableFile) {
+      setTableFile({
+        ...tableFile,
+        name: newName
+      });
+    }
+  };
+
   const handleGeneratePackage = async () => {
     if (!tableFile) {
       toast({
@@ -298,6 +307,7 @@ export default function Home() {
                   tableFile={tableFile}
                   settings={settings}
                   onSettingsChange={updateSettings}
+                  onTableNameChange={handleTableNameChange}
                 />
               </CardContent>
             </Card>
