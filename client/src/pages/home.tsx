@@ -371,6 +371,9 @@ export default function Home() {
                     category="scripts"
                     hasFile={hasFileForCategory('scripts')}
                     uploadedFile={getFileForCategory('scripts')}
+                    showCustomLocation={true}
+                    customLocation={customFileLocation}
+                    onCustomLocationChange={setCustomFileLocation}
                   />
                 </div>
               </CardContent>
