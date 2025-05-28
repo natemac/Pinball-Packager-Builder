@@ -58,9 +58,8 @@ export interface AdditionalFile {
   id: string;
   file: File;
   originalName: string;
-  category: 'cover' | 'topper' | 'tableVideo' | 'marqueeVideo' | 'directb2s' | 'music' | 'scripts' | 'custom';
+  category: 'cover' | 'topper' | 'tableVideo' | 'marqueeVideo' | 'directb2s' | 'music' | 'scripts';
   size: number;
-  customLocation?: string;
 }
 
 export interface FileLocationSettings {
@@ -71,13 +70,14 @@ export interface FileLocationSettings {
 }
 
 export interface PackageSettings {
+  baseDirectory: string;
+  mediaFolder: string;
+  preserveExtensions: boolean;
   convertImages: boolean;
   convertVideos: boolean;
   imageCompression: 'none' | 'low' | 'medium' | 'high';
   videoCompression: 'none' | 'low' | 'medium' | 'high';
-  preserveExtensions: boolean;
   compressionLevel: 'low' | 'normal' | 'high';
-  includeTableFile?: boolean;
   tableFileSettings: FileLocationSettings;
   fileSettings: {
     cover: FileLocationSettings;

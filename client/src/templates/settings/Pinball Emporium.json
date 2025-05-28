@@ -49,7 +49,7 @@
       "location": "emulators\\Visual Pinball X\\Music"
     },
     "scripts": {
-      "useTableName": false,
+      "useTableName": true,
       "prefix": "",
       "suffix": "",
       "location": "emulators\\Visual Pinball X\\Scripts"

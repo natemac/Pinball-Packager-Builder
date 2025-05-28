@@ -4,13 +4,14 @@ import { PackageBuilder } from '@/lib/package-builder';
 import { generateUniqueId } from '@/lib/file-utils';
 
 const defaultSettings: PackageSettings = {
+  baseDirectory: 'Collection',
+  mediaFolder: 'media',
+  preserveExtensions: true,
   convertImages: false,
   convertVideos: false,
   imageCompression: 'none',
   videoCompression: 'none',
-  preserveExtensions: true,
   compressionLevel: 'normal',
-  includeTableFile: true,
   tableFileSettings: {
     useTableName: false,
     prefix: '',
@@ -55,7 +56,7 @@ const defaultSettings: PackageSettings = {
       location: 'Collection\\Visual Pinball X\\media\\music'
     },
     scripts: {
-      useTableName: false,
+      useTableName: true,
       prefix: '',
       suffix: '',
       location: 'Collection\\Visual Pinball X\\scripts'
@@ -68,14 +69,13 @@ export function useFileProcessor() {
   const [additionalFiles, setAdditionalFiles] = useState<AdditionalFile[]>([]);
   const [settings, setSettings] = useState<PackageSettings>(defaultSettings);
 
-  const addAdditionalFile = useCallback((file: File, category: AdditionalFile['category'], customLocation?: string) => {
+  const addAdditionalFile = useCallback((file: File, category: AdditionalFile['category']) => {
     const newFile: AdditionalFile = {
       id: generateUniqueId(),
       file,
       originalName: file.name,
       category,
-      size: file.size,
-      customLocation
+      size: file.size
     };
 
     setAdditionalFiles(prev => [...prev, newFile]);

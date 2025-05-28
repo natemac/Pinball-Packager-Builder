@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
@@ -12,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Settings, HelpCircle, Box, Download, Plus, Check } from "lucide-react";
+import { Settings, HelpCircle, Box, Download } from "lucide-react";
 import DragDropZone from "@/components/drag-drop-zone";
 import FileUploadCard from "@/components/file-upload-card";
 import PackageStructure from "@/components/package-structure";
@@ -27,8 +26,6 @@ export default function Home() {
   const [showSettings, setShowSettings] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationProgress, setGenerationProgress] = useState(0);
-  const [showCustomFileForm, setShowCustomFileForm] = useState(false);
-  const [useTableNameForCustom, setUseTableNameForCustom] = useState(false);
 
   const {
     tableFile,
@@ -83,24 +80,13 @@ export default function Home() {
     });
   };
 
-  const handleCustomFileUpload = (file: File, customLocation: string) => {
-    addAdditionalFile(file, 'custom', customLocation);
-    toast({
-      title: "Custom File Added",
-      description: `${file.name} has been added to your package.`,
-    });
-  };
-
   const handleUseTableNameChange = (category: AdditionalFile['category'], use: boolean) => {
-    // Skip updating settings for custom files as they don't have predefined settings
-    if (category === 'custom') return;
-    
     updateSettings({
       ...settings,
       fileSettings: {
         ...settings.fileSettings,
         [category]: {
-          ...settings.fileSettings[category as keyof typeof settings.fileSettings],
+          ...settings.fileSettings[category],
           useTableName: use
         }
       }
@@ -167,13 +153,13 @@ export default function Home() {
     }
   };
 
-  const totalFiles = additionalFiles.length + (tableFile && settings.includeTableFile !== false ? 1 : 0);
+  const totalFiles = additionalFiles.length + (tableFile ? 1 : 0);
   const estimatedSize = calculateEstimatedSize();
 
   function calculateEstimatedSize(): string {
     let totalBytes = 0;
 
-    if (tableFile && settings.includeTableFile !== false) {
+    if (tableFile) {
       totalBytes += tableFile.file.size;
     }
 
@@ -299,196 +285,68 @@ export default function Home() {
                     hasFile={hasFileForCategory('marqueeVideo')}
                     uploadedFile={getFileForCategory('marqueeVideo')}
                   />
-
-
                 </div>
+
+                {/* VPX-Specific Files */}
+                {tableFile?.type === 'vpx' && (
+                  <div className="mt-6 p-4 bg-indigo-50 border border-indigo-200 rounded-lg">
+                    <h3 className="font-medium text-indigo-900 mb-3 flex items-center">
+                      <span className="text-yellow-500 mr-2">⭐</span>
+                      Visual Pinball X Specific Files
+                    </h3>
+                    <div className="space-y-4">
+                      <div className="border border-indigo-200 rounded-lg p-4 bg-white">
+                        <FileUploadCard
+                          title="DirectB2S"
+                          description="Backglass file (.directb2s)"
+                          icon="code"
+                          onFileUpload={(file) => handleAdditionalFileUpload(file, 'directb2s')}
+                          acceptedTypes={['.directb2s']}
+                          compact
+                          useTableName={settings.fileSettings.directb2s.useTableName}
+                          onUseTableNameChange={(use) => handleUseTableNameChange('directb2s', use)}
+                          category="directb2s"
+                          hasFile={hasFileForCategory('directb2s')}
+                          uploadedFile={getFileForCategory('directb2s')}
+                        />
+                      </div>
+
+                      <div className="border border-indigo-200 rounded-lg p-4 bg-white">
+                        <FileUploadCard
+                          title="Music"
+                          description="Audio files (.mp3, .wav)"
+                          icon="audio"
+                          onFileUpload={(file) => handleAdditionalFileUpload(file, 'music')}
+                          acceptedTypes={['.mp3', '.wav']}
+                          compact
+                          useTableName={settings.fileSettings.music.useTableName}
+                          onUseTableNameChange={(use) => handleUseTableNameChange('music', use)}
+                          category="music"
+                          hasFile={hasFileForCategory('music')}
+                          uploadedFile={getFileForCategory('music')}
+                        />
+                      </div>
+
+                      <div className="border border-indigo-200 rounded-lg p-4 bg-white">
+                        <FileUploadCard
+                          title="Scripts"
+                          description="Script files (.vbs, .txt)"
+                          icon="code"
+                          onFileUpload={(file) => handleAdditionalFileUpload(file, 'scripts')}
+                          acceptedTypes={['.vbs', '.txt']}
+                          compact
+                          useTableName={settings.fileSettings.scripts.useTableName}
+                          onUseTableNameChange={(use) => handleUseTableNameChange('scripts', use)}
+                          category="scripts"
+                          hasFile={hasFileForCategory('scripts')}
+                          uploadedFile={getFileForCategory('scripts')}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
-
-            {/* Custom Files Card */}
-            <Card className="w-full">
-              <CardContent className="p-6">
-                <div className="flex items-center mb-4">
-                  <div className="w-8 h-8 bg-purple-600 text-white rounded-full flex items-center justify-center text-sm font-bold mr-3">
-                    +
-                  </div>
-                  <h2 className="text-lg font-semibold text-slate-900">Custom Files</h2>
-                </div>
-
-                <div className="space-y-4">
-                  {/* Show existing custom files */}
-                  {additionalFiles.filter(file => file.category === 'custom').map((file) => (
-                    <div key={file.id} className="border border-green-300 bg-green-50 rounded-lg p-6">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <h3 className="font-medium text-slate-700">{file.originalName}</h3>
-                            <Check className="h-4 w-4 text-green-500" />
-                          </div>
-                          <p className="text-sm text-slate-500 mb-3">Location: {file.customLocation}</p>
-                        </div>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => removeAdditionalFile(file.id)}
-                          className="text-red-600 hover:text-red-700"
-                        >
-                          Remove
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-
-                  {/* Add Custom File - matches other file upload cards */}
-                  <div className={`
-                    border border-slate-200 rounded-lg p-6 bg-white hover:border-blue-300 transition-colors cursor-pointer
-                    ${showCustomFileForm ? 'border-blue-400 bg-blue-50' : ''}
-                  `}>
-                    <div className="flex items-start justify-between">
-                      {/* Left side - Content justified left */}
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-medium text-slate-700">Add Custom File</h3>
-                        </div>
-                        <p className="text-sm text-slate-500 mb-3">Upload any additional file for your package</p>
-
-                        {/* File Location Input - only show when form is expanded */}
-                        {showCustomFileForm && (
-                          <div className="mb-3">
-                            <Label htmlFor="customLocation" className="text-sm font-medium">
-                              File Location
-                            </Label>
-                            <Input
-                              id="customLocation"
-                              placeholder="Collection\Visual Pinball X\custom"
-                              className="mt-1"
-                              defaultValue="Collection\Visual Pinball X\custom"
-                            />
-                            <p className="text-xs text-slate-500 mt-1">
-                              Example: Collection\Visual Pinball X\Tables or custom\subfolder
-                            </p>
-                          </div>
-                        )}
-
-                        {/* Use table name checkbox - only show when form is expanded */}
-                        {showCustomFileForm && (
-                          <div className="flex items-center space-x-2">
-                            <Checkbox
-                              id="useTableNameCustom"
-                              checked={useTableNameForCustom}
-                              onCheckedChange={(checked) => setUseTableNameForCustom(!!checked)}
-                            />
-                            <Label htmlFor="useTableNameCustom" className="text-xs text-slate-600">
-                              Use table name as filename
-                            </Label>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Right side - Upload Button (matches other cards) */}
-                      <div className="flex flex-col items-center gap-3 ml-4">
-                        {!showCustomFileForm ? (
-                          <Button
-                            variant="secondary"
-                            onClick={() => setShowCustomFileForm(true)}
-                            className="p-3 pl-[75px] pr-[75px] pt-[47px] pb-[47px] mt-[-9px] mb-[-9px] ml-[-5px] mr-[-5px]"
-                          >
-                            <Plus className="h-6 w-6 text-slate-400" />
-                          </Button>
-                        ) : (
-                          <div className="flex flex-col gap-2">
-                            <Button
-                              onClick={() => document.getElementById('custom-file-input')?.click()}
-                              className="px-4 py-2"
-                            >
-                              Choose File
-                            </Button>
-                            <Button
-                              variant="outline"
-                              onClick={() => setShowCustomFileForm(false)}
-                              className="px-4 py-2"
-                            >
-                              Cancel
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    <input
-                      id="custom-file-input"
-                      type="file"
-                      className="hidden"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        const locationInput = document.getElementById('customLocation') as HTMLInputElement;
-                        if (file && locationInput?.value.trim()) {
-                          handleCustomFileUpload(file, locationInput.value.trim());
-                          e.target.value = '';
-                          locationInput.value = 'Collection\\Visual Pinball X\\custom';
-                          setShowCustomFileForm(false);
-                        }
-                      }}
-                    />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* VPX-Specific Files */}
-            {tableFile?.type === 'vpx' && (
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center mb-4">
-                    <div className="w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center text-sm font-bold mr-3">
-                      ⭐
-                    </div>
-                    <h2 className="text-lg font-semibold text-slate-900">Visual Pinball X Specific Files</h2>
-                  </div>
-
-                  <div className="space-y-4">
-                    <FileUploadCard
-                      title="DirectB2S"
-                      description="Backglass file (.directb2s)"
-                      icon="code"
-                      onFileUpload={(file) => handleAdditionalFileUpload(file, 'directb2s')}
-                      acceptedTypes={['.directb2s']}
-                      useTableName={settings.fileSettings.directb2s.useTableName}
-                      onUseTableNameChange={(use) => handleUseTableNameChange('directb2s', use)}
-                      category="directb2s"
-                      hasFile={hasFileForCategory('directb2s')}
-                      uploadedFile={getFileForCategory('directb2s')}
-                    />
-
-                    <FileUploadCard
-                      title="Music"
-                      description="Audio files (.mp3, .wav)"
-                      icon="audio"
-                      onFileUpload={(file) => handleAdditionalFileUpload(file, 'music')}
-                      acceptedTypes={['.mp3', '.wav']}
-                      useTableName={settings.fileSettings.music.useTableName}
-                      onUseTableNameChange={(use) => handleUseTableNameChange('music', use)}
-                      category="music"
-                      hasFile={hasFileForCategory('music')}
-                      uploadedFile={getFileForCategory('music')}
-                    />
-
-                    <FileUploadCard
-                      title="Scripts"
-                      description="Script files (.vbs, .txt)"
-                      icon="code"
-                      onFileUpload={(file) => handleAdditionalFileUpload(file, 'scripts')}
-                      acceptedTypes={['.vbs', '.txt']}
-                      useTableName={settings.fileSettings.scripts.useTableName}
-                      onUseTableNameChange={(use) => handleUseTableNameChange('scripts', use)}
-                      category="scripts"
-                      hasFile={hasFileForCategory('scripts')}
-                      uploadedFile={getFileForCategory('scripts')}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            )}
 
             {/* Step 3: Package Generation */}
             <Card>
@@ -514,25 +372,6 @@ export default function Home() {
                       <p className="text-sm text-slate-500">Estimated size</p>
                       <p className="font-medium text-slate-900">{estimatedSize}</p>
                     </div>
-                  </div>
-
-                  {/* Include Table File Checkbox */}
-                  <div className="mb-4 p-3 bg-white border border-slate-200 rounded-lg">
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="includeTableFile"
-                        checked={settings.includeTableFile ?? true}
-                        onCheckedChange={(checked) => 
-                          updateSettings({ ...settings, includeTableFile: !!checked })
-                        }
-                      />
-                      <Label htmlFor="includeTableFile" className="text-sm font-medium">
-                        Include Table File
-                      </Label>
-                    </div>
-                    <p className="text-xs text-slate-500 ml-6 mt-1">
-                      When unchecked, only the frontend files will be packaged
-                    </p>
                   </div>
 
                   {/* Convert & Compress Sections */}
@@ -666,7 +505,6 @@ export default function Home() {
               tableFile={tableFile}
               onRemoveFile={removeAdditionalFile}
               onRemoveTableFile={() => setTableFile(null)}
-              settings={settings}
             />
 
             {/* File Location Setup */}

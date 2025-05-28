@@ -35,12 +35,7 @@ export class PackageBuilder {
   }
 
   private getCategoryPath(category: AdditionalFile['category'], gameType: 'vpx' | 'fp'): string {
-    // Skip category path for custom files as they have their own location
-    if (category === 'custom') {
-      return '';
-    }
-    
-    const fileSettings = this.settings.fileSettings[category as keyof typeof this.settings.fileSettings];
+    const fileSettings = this.settings.fileSettings[category];
     if (fileSettings?.location) {
       // Use the custom location if specified
       let location = fileSettings.location;
@@ -58,12 +53,7 @@ export class PackageBuilder {
   }
 
   private getFileName(originalName: string, tableName: string, category: AdditionalFile['category']): string {
-    // Skip file name processing for custom files - use original name
-    if (category === 'custom') {
-      return originalName;
-    }
-    
-    const fileSettings = this.settings.fileSettings[category as keyof typeof this.settings.fileSettings];
+    const fileSettings = this.settings.fileSettings[category];
     const extension = originalName.split('.').pop() || '';
     
     let fileName = '';
@@ -102,8 +92,8 @@ export class PackageBuilder {
   async addTableFile(tableFile: TableFile): Promise<void> {
     const tableFileSettings = this.settings.tableFileSettings;
     
-    if (!tableFileSettings?.location || this.settings.includeTableFile === false) {
-      // Skip adding table file if no location is set in settings or if includeTableFile is false
+    if (!tableFileSettings?.location) {
+      // Skip adding table file if no location is set in settings
       return;
     }
     
@@ -238,24 +228,14 @@ export class PackageBuilder {
   }
 
   async addAdditionalFile(file: AdditionalFile, tableName: string, gameType: 'vpx' | 'fp'): Promise<void> {
-    let categoryPath: string;
-    let fileName: string;
+    const categoryPath = this.getCategoryPath(file.category, gameType);
     
-    // Handle custom files with custom locations
-    if (file.category === 'custom' && file.customLocation) {
-      categoryPath = file.customLocation.replace(/\\/g, '/');
-      fileName = file.originalName;
-    } else {
-      categoryPath = this.getCategoryPath(file.category, gameType);
-      
-      // Skip adding file if no location is set in settings
-      if (!categoryPath) {
-        return;
-      }
-      
-      fileName = this.getFileName(file.originalName, tableName, file.category);
+    // Skip adding file if no location is set in settings
+    if (!categoryPath) {
+      return;
     }
     
+    const fileName = this.getFileName(file.originalName, tableName, file.category);
     const filePath = `${categoryPath}/${fileName}`;
     
     let fileToAdd = file.file;

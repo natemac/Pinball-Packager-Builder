@@ -109,8 +109,8 @@ export default function FileUploadCard({
           >
             {getButtonText()}
           </Button>
-
-          {onUseTableNameChange && category !== 'music' && (
+          
+          {onUseTableNameChange && (
             <div className="flex items-center space-x-2">
               <Checkbox
                 id={`${category}-useTableName`}
@@ -156,7 +156,7 @@ export default function FileUploadCard({
       `}
     >
       <input {...getInputProps()} />
-
+      
       <div className="flex items-start justify-between">
         {/* Left side - Content justified left */}
         <div className="flex-1">
@@ -165,8 +165,8 @@ export default function FileUploadCard({
             {hasFile && <Check className="h-4 w-4 text-green-500" />}
           </div>
           <p className="text-sm text-slate-500 mb-3">{description}</p>
-
-          {onUseTableNameChange && category !== 'music' && (
+          
+          {onUseTableNameChange && (
             <div className="flex items-center space-x-2">
               <Checkbox
                 id={`${category}-useTableName`}
@@ -179,7 +179,7 @@ export default function FileUploadCard({
             </div>
           )}
         </div>
-
+        
         {/* Right side - Combined Upload Button */}
         <div className="flex flex-col items-center gap-3 ml-4">
           {hasFile && uploadedFile ? (

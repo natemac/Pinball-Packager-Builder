@@ -49,7 +49,7 @@
       "location": "PinUP Popper\\POPMedia\\Visual Pinball X\\Music"
     },
     "scripts": {
-      "useTableName": false,
+      "useTableName": true,
       "prefix": "",
       "suffix": "",
       "location": "PinUP Popper\\VPinball\\VisualPinball\\Scripts"

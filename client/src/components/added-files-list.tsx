@@ -8,17 +8,10 @@ interface AddedFilesListProps {
   files: AdditionalFile[];
   tableFile: TableFile | null;
   onRemoveFile: (fileId: string) => void;
-  onRemoveTableFile: () => void;
-  settings: PackageSettings;
+  onRemoveTableFile?: () => void;
 }
 
-export default function AddedFilesList({
-  files,
-  tableFile,
-  onRemoveFile,
-  onRemoveTableFile,
-  settings
-}: AddedFilesListProps) {
+export default function AddedFilesList({ files, tableFile, onRemoveFile, onRemoveTableFile }: AddedFilesListProps) {
   const getFileIcon = (category: string) => {
     switch (category) {
       case 'cover':
@@ -80,7 +73,7 @@ export default function AddedFilesList({
             {(tableFile ? 1 : 0) + files.length}
           </Badge>
         </h3>
-
+        
         {!tableFile && files.length === 0 ? (
           <div className="text-center py-8 text-slate-500">
             <FileImage className="h-12 w-12 mx-auto mb-3 text-slate-300" />
@@ -122,7 +115,7 @@ export default function AddedFilesList({
                 )}
               </div>
             )}
-
+            
             {/* Additional Files */}
             {files.map((file) => (
               <div

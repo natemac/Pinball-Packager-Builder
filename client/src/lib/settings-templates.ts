@@ -29,7 +29,7 @@ export const getTemplate = (templateId: string): PackageSettings | null => {
 
 const extractSettingsFromTemplate = (template: any): PackageSettings => {
   const { templateName, ...templateData } = template;
-
+  
   // Handle the nested fileSettings structure from JSON templates
   let processedSettings: PackageSettings;
   if (templateData.fileSettings && templateData.fileSettings.tableFileSettings) {
@@ -63,13 +63,13 @@ const extractSettingsFromTemplate = (template: any): PackageSettings => {
         tableVideo: { useTableName: true, prefix: '', suffix: '', location: 'Collection\\Visual Pinball X\\media\\videos' },
         marqueeVideo: { useTableName: true, prefix: '', suffix: '', location: 'Collection\\Visual Pinball X\\media\\marquee' },
         directb2s: { useTableName: true, prefix: '', suffix: '', location: 'Collection\\Visual Pinball X\\Tables' },
-        music: { prefix: '', suffix: '', location: 'Collection\\Visual Pinball X\\Music' },
-        scripts: { useTableName: false, prefix: '', suffix: '', location: 'Collection\\Visual Pinball X\\Scripts' }
+        music: { useTableName: true, prefix: '', suffix: '', location: 'Collection\\Visual Pinball X\\Music' },
+        scripts: { useTableName: true, prefix: '', suffix: '', location: 'Collection\\Visual Pinball X\\Scripts' }
       },
       ...templateData
     };
   }
-
+  
   return processedSettings as PackageSettings;
 };
 
@@ -80,39 +80,39 @@ export const downloadSettingsAsJson = (settings: PackageSettings, filename: stri
     templateName: 'Custom',
     ...exportSettings
   };
-
+  
   const blob = new Blob([JSON.stringify(settingsWithTemplateName, null, 2)], {
     type: 'application/json'
   });
-
+  
   saveAs(blob, filename);
 };
 
 export const loadSettingsFromJson = (file: File): Promise<PackageSettings> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-
+    
     reader.onload = (e) => {
       try {
         const content = e.target?.result as string;
         const parsed = JSON.parse(content);
-
+        
         // Validate that it has the required structure
         if (!parsed.fileSettings || typeof parsed.fileSettings !== 'object') {
           throw new Error('Invalid settings file format');
         }
-
+        
         const settings = extractSettingsFromTemplate(parsed);
         resolve(settings);
       } catch (error) {
         reject(new Error('Failed to parse settings file: ' + error));
       }
     };
-
+    
     reader.onerror = () => {
       reject(new Error('Failed to read file'));
     };
-
+    
     reader.readAsText(file);
   });
 };
