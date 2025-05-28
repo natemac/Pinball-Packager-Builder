@@ -3,6 +3,7 @@ import { useDropzone } from "react-dropzone";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { Image, Video, Music, Code, Plus, Check } from "lucide-react";
 
 interface FileUploadCardProps {
@@ -17,6 +18,9 @@ interface FileUploadCardProps {
   category?: string;
   hasFile?: boolean;
   uploadedFile?: File;
+  customLocation?: string;
+  onCustomLocationChange?: (location: string) => void;
+  showCustomLocation?: boolean;
 }
 
 const iconMap = {
@@ -44,7 +48,10 @@ export default function FileUploadCard({
   useTableName,
   onUseTableNameChange,
   hasFile = false,
-  uploadedFile
+  uploadedFile,
+  customLocation,
+  onCustomLocationChange,
+  showCustomLocation = false
 }: FileUploadCardProps) {
   const IconComponent = iconMap[icon];
   const iconColor = iconColorMap[icon];
@@ -176,6 +183,21 @@ export default function FileUploadCard({
               <Label htmlFor={`${category}-useTableName`} className="text-xs text-slate-600">
                 Use table name as filename
               </Label>
+            </div>
+          )}
+          
+          {showCustomLocation && onCustomLocationChange && (
+            <div className="space-y-1 mt-2">
+              <Label htmlFor={`${category}-customLocation`} className="text-xs text-slate-600">
+                File Location
+              </Label>
+              <Input
+                id={`${category}-customLocation`}
+                value={customLocation || ''}
+                onChange={(e) => onCustomLocationChange(e.target.value)}
+                placeholder="Enter custom file location..."
+                className="text-xs"
+              />
             </div>
           )}
         </div>

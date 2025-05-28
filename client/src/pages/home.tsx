@@ -26,6 +26,7 @@ export default function Home() {
   const [showSettings, setShowSettings] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationProgress, setGenerationProgress] = useState(0);
+  const [customFileLocation, setCustomFileLocation] = useState('');
 
   const {
     tableFile,
