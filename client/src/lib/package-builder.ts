@@ -90,6 +90,11 @@ export class PackageBuilder {
   }
 
   async addTableFile(tableFile: TableFile): Promise<void> {
+    // Skip adding table file if not included in settings
+    if (!this.settings.includeTableFile) {
+      return;
+    }
+    
     const tableFileSettings = this.settings.tableFileSettings;
     
     if (!tableFileSettings?.location) {

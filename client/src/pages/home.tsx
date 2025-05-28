@@ -523,8 +523,9 @@ export default function Home() {
             </Card>
 
             <AddedFilesList
-              files={additionalFiles}
               tableFile={tableFile}
+              files={additionalFiles}
+              settings={settings}
               onRemoveFile={removeAdditionalFile}
               onRemoveTableFile={() => setTableFile(null)}
             />

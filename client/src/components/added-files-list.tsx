@@ -2,16 +2,17 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ListChecks, FileImage, FileVideo, Music, FileCode, Trash2 } from "lucide-react";
-import type { AdditionalFile, TableFile } from "@shared/schema";
+import type { TableFile, AdditionalFile, PackageSettings } from "@shared/schema";
 
 interface AddedFilesListProps {
-  files: AdditionalFile[];
   tableFile: TableFile | null;
+  files: AdditionalFile[];
+  settings: PackageSettings;
   onRemoveFile: (fileId: string) => void;
   onRemoveTableFile?: () => void;
 }
 
-export default function AddedFilesList({ files, tableFile, onRemoveFile, onRemoveTableFile }: AddedFilesListProps) {
+export default function AddedFilesList({ tableFile, files, settings, onRemoveFile, onRemoveTableFile }: AddedFilesListProps) {
   const getFileIcon = (category: string) => {
     switch (category) {
       case 'cover':
@@ -73,7 +74,7 @@ export default function AddedFilesList({ files, tableFile, onRemoveFile, onRemov
             {(tableFile ? 1 : 0) + files.length}
           </Badge>
         </h3>
-        
+
         {!tableFile && files.length === 0 ? (
           <div className="text-center py-8 text-slate-500">
             <FileImage className="h-12 w-12 mx-auto mb-3 text-slate-300" />
@@ -115,7 +116,7 @@ export default function AddedFilesList({ files, tableFile, onRemoveFile, onRemov
                 )}
               </div>
             )}
-            
+
             {/* Additional Files */}
             {files.map((file) => (
               <div
