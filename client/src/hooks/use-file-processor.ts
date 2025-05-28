@@ -3,17 +3,26 @@ import type { TableFile, AdditionalFile, PackageSettings } from '@shared/schema'
 import { PackageBuilder } from '@/lib/package-builder';
 import { generateUniqueId } from '@/lib/file-utils';
 
-const defaultSettings: PackageSettings = {
-  baseDirectory: 'Collection',
-  mediaFolder: 'media',
-  preserveExtensions: true,
-  convertImages: false,
-  convertVideos: false,
-  imageCompression: 'none',
-  videoCompression: 'none',
-  compressionLevel: 'normal',
-  includeTableFile: true,
-  tableFileSettings: {
+import { getTemplate } from '@/lib/settings-templates';
+
+const getDefaultSettings = (): PackageSettings => {
+  const pinballEmporiumTemplate = getTemplate('pinball-emporium');
+  if (pinballEmporiumTemplate) {
+    return pinballEmporiumTemplate;
+  }
+  
+  // Fallback settings if template loading fails
+  return {
+    baseDirectory: 'Collection',
+    mediaFolder: 'media',
+    preserveExtensions: true,
+    convertImages: false,
+    convertVideos: false,
+    imageCompression: 'none',
+    videoCompression: 'none',
+    compressionLevel: 'normal',
+    includeTableFile: true,
+    tableFileSettings: {
     useTableName: false,
     prefix: '',
     suffix: '',
@@ -62,13 +71,13 @@ const defaultSettings: PackageSettings = {
       suffix: '',
       location: 'Collection\\Visual Pinball X\\scripts'
     }
-  }
+  };
 };
 
 export function useFileProcessor() {
   const [tableFile, setTableFile] = useState<TableFile | null>(null);
   const [additionalFiles, setAdditionalFiles] = useState<AdditionalFile[]>([]);
-  const [settings, setSettings] = useState<PackageSettings>(defaultSettings);
+  const [settings, setSettings] = useState<PackageSettings>(getDefaultSettings());
 
   const addAdditionalFile = useCallback((file: File, category: AdditionalFile['category']) => {
     const newFile: AdditionalFile = {
@@ -116,4 +125,4 @@ export function useFileProcessor() {
     clearAll,
     generatePackage
   };
-}
+};

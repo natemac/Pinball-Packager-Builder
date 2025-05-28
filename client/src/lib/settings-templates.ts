@@ -4,6 +4,7 @@ import { saveAs } from 'file-saver';
 // Import template JSON files
 import pinballEmporiumTemplate from '@/templates/settings/Pinball Emporium.json';
 import pinupPopperTemplate from '@/templates/settings/PinUP Popper.json';
+import pinballxTemplate from '@/templates/settings/PinballX.json';
 
 export interface SettingsTemplate {
   templateName: string;
@@ -13,7 +14,8 @@ export interface SettingsTemplate {
 export const TEMPLATE_OPTIONS = [
   { value: 'custom', label: 'Custom...' },
   { value: 'pinball-emporium', label: 'Pinball Emporium' },
-  { value: 'pinup-popper', label: 'PinUP Popper' }
+  { value: 'pinup-popper', label: 'PinUP Popper' },
+  { value: 'pinballx', label: 'PinballX' }
 ];
 
 export const getTemplate = (templateId: string): PackageSettings | null => {
@@ -22,6 +24,8 @@ export const getTemplate = (templateId: string): PackageSettings | null => {
       return extractSettingsFromTemplate(pinballEmporiumTemplate);
     case 'pinup-popper':
       return extractSettingsFromTemplate(pinupPopperTemplate);
+    case 'pinballx':
+      return extractSettingsFromTemplate(pinballxTemplate);
     default:
       return null;
   }
