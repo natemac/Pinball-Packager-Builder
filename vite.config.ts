@@ -3,7 +3,12 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
-export default defineConfig({
+// Get the repo name from package.json or environment variable, or use default
+const repoName = process.env.GITHUB_REPOSITORY ? process.env.GITHUB_REPOSITORY.split('/')[1] : 'Pinball-Packager-Builder';
+
+export default defineConfig({  
+  // Set base path for GitHub Pages deployment
+  base: process.env.NODE_ENV === 'production' ? `/${repoName}/` : '/',
   plugins: [
     react(),
     runtimeErrorOverlay(),
@@ -27,5 +32,11 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist"),
     emptyOutDir: true,
+    // Generate a _redirects file for GitHub Pages SPA support
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
   },
 });
