@@ -6,9 +6,14 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 
+// Declare the global variable that Vite defines
+declare global {
+  const __BASE_PATH__: string;
+}
+
 function Router() {
-  // Get base path for GitHub Pages
-  const basePath = import.meta.env.PROD ? "/Pinball-Packager-Builder" : "";
+  // Get base path for GitHub Pages - this is set by Vite config
+  const basePath = __BASE_PATH__;
   
   return (
     <WouterRouter base={basePath}>

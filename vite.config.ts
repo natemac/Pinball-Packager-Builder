@@ -9,6 +9,10 @@ const repoName = process.env.GITHUB_REPOSITORY ? process.env.GITHUB_REPOSITORY.s
 export default defineConfig({  
   // Set base path for GitHub Pages deployment
   base: process.env.NODE_ENV === 'production' ? `/${repoName}/` : '/',
+  define: {
+    // Pass the base path to the client code
+    __BASE_PATH__: JSON.stringify(process.env.NODE_ENV === 'production' ? `/${repoName}` : ''),
+  },
   plugins: [
     react(),
     runtimeErrorOverlay(),
@@ -39,4 +43,5 @@ export default defineConfig({
       },
     },
   },
+  publicDir: path.resolve(import.meta.dirname, "client", "public"),
 });
