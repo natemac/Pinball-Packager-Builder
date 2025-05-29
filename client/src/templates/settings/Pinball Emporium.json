@@ -1,0 +1,58 @@
+{
+  "templateName": "Pinball Emporium",
+  "baseDirectory": "Collection",
+  "mediaFolder": "media",
+  "preserveExtensions": true,
+  "convertImages": true,
+  "compressionLevel": "normal",
+  "fileSettings": {
+    "tableFileSettings": {
+      "useTableName": true,
+      "prefix": "",
+      "suffix": "",
+      "location": "emulators\\Visual Pinball X\\Tables"
+    },
+    "cover": {
+      "useTableName": true,
+      "prefix": "",
+      "suffix": "",
+      "location": "Collection\\Visual Pinball X\\media\\covers"
+    },
+    "topper": {
+      "useTableName": true,
+      "prefix": "",
+      "suffix": "",
+      "location": "Collection\\Visual Pinball X\\media\\Topper"
+    },
+    "tableVideo": {
+      "useTableName": true,
+      "prefix": "",
+      "suffix": "_Table",
+      "location": "Collection\\Visual Pinball X\\media\\Table Videos"
+    },
+    "marqueeVideo": {
+      "useTableName": true,
+      "prefix": "",
+      "suffix": "_Apron",
+      "location": "Collection\\Visual Pinball X\\media\\Table Videos"
+    },
+    "directb2s": {
+      "useTableName": true,
+      "prefix": "",
+      "suffix": "",
+      "location": "emulators\\Visual Pinball X\\Tables"
+    },
+    "music": {
+      "useTableName": true,
+      "prefix": "",
+      "suffix": "",
+      "location": "emulators\\Visual Pinball X\\Music"
+    },
+    "scripts": {
+      "useTableName": true,
+      "prefix": "",
+      "suffix": "",
+      "location": "emulators\\Visual Pinball X\\Scripts"
+    }
+  }
+}
