@@ -45,13 +45,18 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
       - name: List build output
         run: ls -la ./dist
+      - name: Prepare deployment files
+        run: |
+          mkdir -p ./deploy
+          cp -r ./dist/* ./deploy/
+          ls -la ./deploy
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload dist directory
-          path: './dist'
+          # Upload deployment directory contents
+          path: './deploy'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
